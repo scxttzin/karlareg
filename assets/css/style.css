@@ -959,3 +959,33 @@ body{
   .tabs{top:-32px}
   .tab{height:44px;font-size:10.5px;letter-spacing:.14em;border-radius:14px 14px 3px 3px}
 }
+
+@media (max-width:600px){
+  /* uma criação por linha, com o card grande: duas lado a lado ficavam
+     pequenas demais na tela do celular */
+  .recentes{grid-template-columns:minmax(0,1fr);gap:24px}
+  .recentes .sticker{max-width:100%;padding:11px 11px 13px;border-radius:18px 17px 19px 16px}
+  .recentes .sticker-photo{height:min(38vh,320px)}
+  .recentes .sticker-name{font-size:23px}
+  .recentes .sticker-head{margin:10px 3px 7px}
+  .recentes .tag-list .tag:nth-child(n+3){display:inline-flex}   /* volta a mostrar todas */
+  .recentes .tag{font-size:13px;padding:5px 9px}
+  .recentes .social{gap:12px;padding-top:9px}
+  .recentes .social svg{width:18px;height:18px}
+  .recentes .social button{font-size:12px}
+  .recentes .card-tools svg{width:16px;height:16px}
+  .recentes .sticker::before{width:70px;height:18px;top:-10px}
+
+  /* com o card maior a página passa a rolar; a barra fica discreta,
+     igual à da Galeria */
+  #sheet-inicio .sheet-inner{overflow-y:auto;scrollbar-width:thin;scrollbar-color:transparent transparent}
+  #sheet-inicio .sheet-inner::-webkit-scrollbar{width:8px}
+  #sheet-inicio .sheet-inner::-webkit-scrollbar-thumb{background:transparent;border-radius:8px}
+  #sheet-inicio .sheet-inner:hover::-webkit-scrollbar-thumb{background:var(--bege-2)}
+
+  /* rodapé: estava espremido numa linha só, colado nas bordas */
+  .page-foot{
+    font-size:9.5px;letter-spacing:.14em;line-height:2;
+    padding:0 6px;margin:22px 0 4px;max-width:26em;margin-left:auto;margin-right:auto;
+  }
+}
