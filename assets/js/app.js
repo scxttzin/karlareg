@@ -28,6 +28,12 @@
     for (var i = 0; i < id.length; i++) s += id.charCodeAt(i);
     return ((s % 9) - 4) * 0.6;
   }
+  /* 0 esquerda, 1 centro, 2 direita — sempre o mesmo canto para a mesma peça */
+  function posicaoFita(id) {
+    var s = 0;
+    for (var i = 0; i < id.length; i++) s += id.charCodeAt(i) * (i + 3);
+    return s % 3;
+  }
   function dataCurta(ms) {
     var d = new Date(ms);
     return d.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' });
@@ -408,7 +414,9 @@
       ? '<img class="sticker-photo" src="' + c.foto + '" alt="' + esc(c.nome) + '">'
       : '<div class="sticker-photo"></div>';
     return '' +
-      '<article class="sticker" data-id="' + c.id + '" style="--tilt:' + inclinacao(c.id) + 'deg">' +
+      '<article class="sticker" data-id="' + c.id + '"' +
+        ' data-fita="' + posicaoFita(c.id) + '"' +
+        ' style="--tilt:' + inclinacao(c.id) + 'deg">' +
         '<div class="sticker-foto-wrap">' + foto + '</div>' +
         '<div class="sticker-head">' +
           '<h3 class="sticker-name">' + esc(c.nome) + '</h3>' +

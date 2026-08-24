@@ -410,6 +410,10 @@ body{
   width:80px;height:22px;background:rgba(242,194,48,.75);
   border:2px solid var(--azul);border-radius:3px;
 }
+/* a fita não fica sempre no meio: cada figurinha recebe um canto,
+   sorteado a partir do id, então a posição é sempre a mesma para a peça */
+.sticker[data-fita="0"]::before{left:16%;transform:translateX(-50%) rotate(-11deg)}
+.sticker[data-fita="2"]::before{left:84%;transform:translateX(-50%) rotate(9deg)}
 .sticker-foto-wrap{position:relative}
 .sticker-photo{
   width:100%;aspect-ratio:1/1;object-fit:cover;display:block;
