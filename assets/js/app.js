@@ -278,7 +278,7 @@
     var chave = $('#tagChave').value.trim();
     var valor = $('#tagValor').value.trim();
     if (!chave && !valor) return;
-    if (!valor) { valor = chave; chave = 'tag'; }
+    if (!valor) { valor = chave; chave = ''; }   /* só um campo preenchido: vira o texto da tag */
     estado.tagsNovas.push({ chave: chave, valor: valor, cor: estado.corTag });
     $('#tagChave').value = '';
     $('#tagValor').value = '';
@@ -317,6 +317,11 @@
     e.preventDefault();
     var nome = $('#nomeInput').value.trim();
     if (!nome) { toast('dê um nome à criação'); $('#nomeInput').focus(); return; }
+
+    /* a tag que ficou escrita nos campos, sem clicar em "adicionar",
+       era perdida em silêncio ao salvar; agora ela entra junto */
+    adicionarTag();
+
     var dados = {
       nome: nome,
       tags: estado.tagsNovas.slice(),
@@ -389,7 +394,7 @@
           '<h3 class="sticker-name">' + esc(c.nome) + '</h3>' +
           '<time class="card-date">' + dataNumerica(c.criadoEm) + '</time>' +
         '</div>' +
-        htmlTags(c.tags.slice(0, 4)) +
+        htmlTags(c.tags.slice(0, 6)) +
         '<div class="social">' +
           '<button data-acao="curtir" class="' + (c.curtido ? 'liked' : '') + '" title="curtir">' + ICO.coracao + '<span>' + (c.likes || 0) + '</span></button>' +
           '<button data-acao="comentar" title="comentar">' + ICO.balao + '<span>' + c.comentarios.length + '</span></button>' +
