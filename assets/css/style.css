@@ -78,7 +78,8 @@ body{
     0 6px 14px rgba(6,20,40,.35),          /* sombra do adesivo sobre a capa */
     inset 0 1px 0 rgba(255,255,255,.85),   /* brilho do papel colado */
     inset -1px 0 0 rgba(19,42,76,.10);
-  transition:transform .32s cubic-bezier(.2,.9,.3,1.25),
+  /* sem curva elastica aqui: a aba entra e recua reto, sem repique */
+  transition:transform .55s cubic-bezier(.35,0,.25,1),
              background .32s ease,color .32s ease,box-shadow .32s ease;
 }
 .tab::after{   /* vinco da cola: onde o adesivo passa da folha para a capa */
@@ -882,24 +883,7 @@ body{
 .thumb.alvo{box-shadow:0 0 0 3px var(--amarelo),2px 3px 0 rgba(19,42,76,.18)}
 .thumb:not(.add){cursor:grab}
 
-/* ---------- a aba que sai acompanha a virada da folha ---------- */
-/* fica por cima do papel durante o giro e só depois cai para trás */
-.tab.acompanhando{
-  z-index:6;
-  animation:acompanharFolha .95s cubic-bezier(.62,.02,.24,1) both;
-}
-@keyframes acompanharFolha{
-  0%  {transform:translateX(9px)}
-  30% {transform:translateX(-7px)}   /* puxada junto com a folha que vira */
-  62% {transform:translateX(3px)}
-  100%{transform:translateX(0)}
-}
-@media (max-width:600px){
-  .tab.acompanhando{animation-name:acompanharFolhaMobile}
-  @keyframes acompanharFolhaMobile{
-    0%  {transform:translateY(3px)}
-    30% {transform:translateY(-6px)}
-    62% {transform:translateY(2px)}
-    100%{transform:translateY(0)}
-  }
-}
+/* ---------- a aba que sai ---------- */
+/* ela só recua e some atrás da folha no fim da virada: nada de pulo.
+   O movimento é o mesmo recuo suave do translateX da aba ativa. */
+.tab.acompanhando{z-index:6}
