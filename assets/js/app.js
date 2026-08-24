@@ -65,8 +65,6 @@
   };
 
   /* ---------- navegação entre folhas ---------- */
-  var DURACAO_VIRADA = 950;   /* mesmo tempo da transição da folha no CSS */
-  var timerAba;
 
   function irPara(aba) {
     if (aba === estado.abaAtual) return;
@@ -76,18 +74,8 @@
     estado.abaAtual = aba;
     $('#pages').dataset.aba = aba;
 
-    /* a aba que sai acompanha a folha por cima e só desce atrás dela no fim */
-    var saindo = $('.tab.is-active');
+    /* só a aba aberta fica na frente: a outra vai para trás na hora */
     $$('.tab').forEach(function (b) { b.classList.toggle('is-active', b.dataset.goto === aba); });
-
-    clearTimeout(timerAba);
-    $$('.tab').forEach(function (b) { b.classList.remove('acompanhando'); });
-    if (saindo && !saindo.classList.contains('is-active')) {
-      saindo.classList.add('acompanhando');
-      timerAba = setTimeout(function () {
-        saindo.classList.remove('acompanhando');
-      }, DURACAO_VIRADA);
-    }
   }
   $$('.tab').forEach(function (b) {
     b.addEventListener('click', function () { irPara(b.dataset.goto); });

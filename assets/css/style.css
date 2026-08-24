@@ -891,7 +891,3 @@ body{
 .thumb.alvo{box-shadow:0 0 0 3px var(--amarelo),2px 3px 0 rgba(19,42,76,.18)}
 .thumb:not(.add){cursor:grab}
 
-/* ---------- a aba que sai ---------- */
-/* ela só recua e some atrás da folha no fim da virada: nada de pulo.
-   O movimento é o mesmo recuo suave do translateX da aba ativa. */
-.tab.acompanhando{z-index:6}
