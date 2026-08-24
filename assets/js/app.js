@@ -85,6 +85,16 @@
     b.addEventListener('click', function () { irPara(b.dataset.goto); });
   });
 
+  /* a barra da Galeria só aparece enquanto se rola; some sozinha depois */
+  (function () {
+    var folha = $('#galeriaScroll'), sumir;
+    folha.addEventListener('scroll', function () {
+      folha.classList.add('rolando-agora');
+      clearTimeout(sumir);
+      sumir = setTimeout(function () { folha.classList.remove('rolando-agora'); }, 900);
+    }, { passive: true });
+  })();
+
   /* ---------- foto ---------- */
   function lerFoto(file, cb) {
     var fr = new FileReader();

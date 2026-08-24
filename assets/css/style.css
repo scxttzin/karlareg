@@ -916,3 +916,17 @@ body{
   .glass-bar{gap:8px;justify-content:flex-start}
   .search-field.glass{flex:1 1 auto}
 }
+
+/* ---------- barra de rolagem discreta na Galeria ---------- */
+/* a largura não muda, só a cor: assim nada se desloca quando ela aparece */
+#galeriaScroll{scrollbar-width:thin;scrollbar-color:transparent transparent}
+#galeriaScroll::-webkit-scrollbar{width:9px}
+#galeriaScroll::-webkit-scrollbar-track{background:transparent}
+#galeriaScroll::-webkit-scrollbar-thumb{
+  background:transparent;border-radius:9px;
+  border:2px solid transparent;background-clip:content-box;
+}
+#galeriaScroll:hover,
+#galeriaScroll.rolando-agora{scrollbar-color:var(--bege-2) transparent}
+#galeriaScroll:hover::-webkit-scrollbar-thumb,
+#galeriaScroll.rolando-agora::-webkit-scrollbar-thumb{background:var(--bege-2);background-clip:content-box}
