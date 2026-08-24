@@ -172,3 +172,14 @@ Projeto **KarlaReg**, região São Paulo — `gmwoffyzcqtmzctldizw`.
 As fotos vão para o bucket `criacoes` no Storage; o banco guarda só a URL pública.
 A chave `sb_publishable_…` é feita para aparecer no código do site; a chave secreta
 (`service_role`) não está no projeto e não deve entrar.
+
+## Publicar uma atualização
+
+```bash
+git add -A && git commit -m "o que mudou" && git push
+```
+
+O GitHub Pages republica em cerca de meio minuto. **Ao mexer em CSS ou JS,
+aumente o `?v=` dos arquivos no `index.html`** — o Pages entrega os assets com
+dez minutos de cache, e sem trocar esse número o visitante continua vendo a
+versão antiga.
