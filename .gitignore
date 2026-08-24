@@ -1,0 +1,13 @@
+# referências de inspiração (imagens de terceiros, não são do projeto)
+Layout Ideals/
+
+# configuração local das ferramentas
+.claude/
+
+# sistema
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# estado local do CLI do Supabase
+supabase/.temp/

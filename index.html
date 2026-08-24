@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KarlaReg — Caderno de Criações</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Patrick+Hand&family=Gochi+Hand&family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<!-- ---------------- ABERTURA: KarlaReg pincelada ---------------- -->
+<div class="intro" id="intro">
+  <p class="intro-nome" aria-label="KarlaReg">
+    <!-- cada letra é traçada em SVG (contorno correndo, depois a tinta enche)
+         enquanto salta de uma direção: --sx/--sy é de onde ela vem,
+         --s é o lado da inclinação, --i a ordem da escrita -->
+    <span class="letra" style="--i:0;--s:-1;--sx:-72%;--sy:-34%"><span class="medida">K</span><svg class="tinta" viewBox="0 0 140 140" aria-hidden="true"><text x="70" y="110">K</text></svg></span><span class="letra" style="--i:1;--s:1;--sx:2%;--sy:-88%"><span class="medida">a</span><svg class="tinta" viewBox="0 0 140 140" aria-hidden="true"><text x="70" y="110">a</text></svg></span><span class="letra" style="--i:2;--s:-1;--sx:62%;--sy:-26%"><span class="medida">r</span><svg class="tinta" viewBox="0 0 140 140" aria-hidden="true"><text x="70" y="110">r</text></svg></span><span class="letra" style="--i:3;--s:1;--sx:-12%;--sy:-96%"><span class="medida">l</span><svg class="tinta" viewBox="0 0 140 140" aria-hidden="true"><text x="70" y="110">l</text></svg></span><span class="letra" style="--i:4;--s:-1;--sx:-66%;--sy:-22%"><span class="medida">a</span><svg class="tinta" viewBox="0 0 140 140" aria-hidden="true"><text x="70" y="110">a</text></svg></span><span class="letra" style="--i:5;--s:1;--sx:12%;--sy:-92%"><span class="medida">R</span><svg class="tinta" viewBox="0 0 140 140" aria-hidden="true"><text x="70" y="110">R</text></svg></span><span class="letra" style="--i:6;--s:-1;--sx:72%;--sy:-30%"><span class="medida">e</span><svg class="tinta" viewBox="0 0 140 140" aria-hidden="true"><text x="70" y="110">e</text></svg></span><span class="letra" style="--i:7;--s:1;--sx:-58%;--sy:-74%"><span class="medida">g</span><svg class="tinta" viewBox="0 0 140 140" aria-hidden="true"><text x="70" y="110">g</text></svg></span>
+  </p>
+</div>
+
+<div class="desk">
+  <div class="binder">
+    <div class="notebook">
+
+      <nav class="tabs" role="tablist">
+        <button class="tab is-active" role="tab" data-goto="inicio"><span>Início</span></button>
+        <button class="tab" role="tab" data-goto="galeria"><span>Galeria</span></button>
+      </nav>
+
+      <div class="pages" id="pages" data-aba="inicio">
+
+        <!-- ---------------- ABA 1: INÍCIO ---------------- -->
+        <section class="sheet is-front" id="sheet-inicio" data-sheet="inicio">
+          <div class="sheet-inner dotted">
+
+            <div class="page-title"><span>Caderno de Criações</span></div>
+            <p class="script-sub">ateliê de cerâmica &middot; @KarlaReg</p>
+
+            <div class="inicio-row" id="inicioRow">
+
+              <!-- Card interativo de nova criação -->
+              <div class="new-card" id="newCard">
+                <button class="new-card-face" id="newCardFace" type="button">
+                  <span class="plus" aria-hidden="true"></span>
+                  <span class="new-card-label">nova criação</span>
+                </button>
+
+                <form class="new-card-form" id="newCardForm" novalidate>
+                  <div class="form-grid">
+
+                    <div class="fotos-col">
+                      <p class="field-label">fotos <span class="conta" id="contaFotos">0/6</span></p>
+                      <div class="fotos-grid" id="fotosGrid"></div>
+                      <input type="file" id="fotoInput" accept="image/*" multiple hidden>
+
+                      <label class="field foto-nota" id="fotoNotaWrap" hidden>
+                        <span>descrição da foto <b id="fotoNotaIdx"></b></span>
+                        <input type="text" id="fotoNota" maxlength="120" placeholder="ex: detalhe da textura">
+                      </label>
+                    </div>
+
+                    <div class="form-fields">
+                      <div class="linha-nome">
+                        <label class="field">
+                          <span>nome da criação</span>
+                          <input type="text" id="nomeInput" maxlength="60" placeholder="ex: vaso ondulado">
+                        </label>
+                        <label class="field campo-data">
+                          <span>data da criação</span>
+                          <input type="date" id="dataInput">
+                        </label>
+                      </div>
+
+                      <div class="field">
+                        <span>tags</span>
+                        <div class="tag-entry">
+                          <input type="text" id="tagChave" list="tagChaves" maxlength="20" placeholder="nome da tag">
+                          <datalist id="tagChaves">
+                            <option value="Cor"><option value="Estilo"><option value="Forma">
+                            <option value="Técnica"><option value="Tamanho"><option value="Acabamento">
+                            <option value="Esmalte"><option value="Queima">
+                          </datalist>
+                          <input type="text" id="tagValor" maxlength="40" placeholder="descrição da tag">
+                          <button type="button" id="addTag" class="mini-btn">adicionar</button>
+                        </div>
+                        <div class="cores" id="coresTag" role="group" aria-label="cor da tag">
+                          <button type="button" class="swatch is-on" data-cor="0" title="verde cinza"></button>
+                          <button type="button" class="swatch" data-cor="1" title="vermelho vinho"></button>
+                          <button type="button" class="swatch" data-cor="2" title="azul claro"></button>
+                          <button type="button" class="swatch" data-cor="3" title="cinza claro"></button>
+                        </div>
+                        <div class="tag-list" id="tagsNovas"></div>
+                      </div>
+
+                      <label class="field">
+                        <span>descrição geral</span>
+                        <textarea id="descricaoInput" maxlength="400" rows="3" placeholder="conte como essa peça foi feita"></textarea>
+                      </label>
+                    </div>
+                  </div>
+
+                  <div class="form-actions">
+                    <button type="button" class="ghost-btn" id="cancelNew">cancelar</button>
+                    <button type="submit" class="solid-btn" id="salvarNovo">colar no caderno</button>
+                  </div>
+                </form>
+              </div>
+
+              <!-- Duas criações mais recentes -->
+              <div class="recentes-bloco" id="recentesBloco">
+                <p class="block-title">criações recentes</p>
+                <div class="recentes" id="recentes"></div>
+                <p class="empty-note" id="vazioInicio" hidden>nenhuma criação colada ainda.</p>
+                <p class="recentes-dica">as duas últimas ficam aqui &mdash; todas as criações estão na aba Galeria</p>
+              </div>
+
+            </div>
+
+            <p class="page-foot">modelar &mdash; secar &mdash; personalizar &mdash; decorar</p>
+          </div>
+        </section>
+
+        <!-- ---------------- ABA 2: GALERIA ---------------- -->
+        <section class="sheet" id="sheet-galeria" data-sheet="galeria">
+          <div class="sheet-inner dotted" id="galeriaScroll">
+            <div class="glass-bar">
+              <div class="search-field glass" data-scope="galeria">
+                <svg class="ico" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"/><line x1="15.5" y1="15.5" x2="21" y2="21"/></svg>
+                <input type="search" id="busca-galeria" placeholder="buscar na galeria" autocomplete="off">
+              </div>
+            </div>
+
+            <div class="gallery" id="galeriaGrid"></div>
+            <p class="empty-note" id="vazioGaleria">a galeria está vazia.</p>
+
+            <p class="page-foot">toque em uma figurinha para abrir</p>
+          </div>
+        </section>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ---------------- MODAL DO CARD ---------------- -->
+<div class="overlay" id="overlay" hidden>
+  <div class="modal" id="modal" role="dialog" aria-modal="true"></div>
+</div>
+
+<!-- ---------------- MODAL DE COMPARTILHAR ---------------- -->
+<div class="overlay" id="shareOverlay" hidden>
+  <div class="share-box" id="shareBox"></div>
+</div>
+
+<div class="toast" id="toast" hidden></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/js/config.js"></script>
+<script src="assets/js/store.js"></script>
+<script src="assets/js/store-supabase.js"></script>
+<script src="assets/js/app.js"></script>
+</body>
+</html>
