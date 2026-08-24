@@ -41,11 +41,15 @@
     var d = new Date(ms), p = function (n) { return String(n).padStart(2, '0'); };
     return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate());
   }
-  /* meio-dia local: evita a data escorregar um dia por causa do fuso */
+  /* guarda o dia escolhido com a hora de agora: o dia é o que aparece na tela,
+     e a hora serve de desempate — sem ela, tudo criado no mesmo dia empatava
+     e a ordem das recentes ficava aleatória */
   function doCampoData(valor) {
     var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(valor || '');
     if (!m) return null;
-    return new Date(+m[1], +m[2] - 1, +m[3], 12, 0, 0).getTime();
+    var agora = new Date();
+    return new Date(+m[1], +m[2] - 1, +m[3],
+      agora.getHours(), agora.getMinutes(), agora.getSeconds(), agora.getMilliseconds()).getTime();
   }
   var toastTimer;
   function toast(msg) {
@@ -302,6 +306,7 @@
     $('#tagValor').value = '';
     $('#descricaoInput').value = '';
     $('#dataInput').value = paraCampoData(Date.now());
+    estado.diaOriginal = '';
     $('#fotoNota').value = '';
     $('#fotoInput').value = '';   /* sem isto a mesma foto nao dispara change de novo */
     $('#salvarNovo').textContent = 'colar no caderno';
@@ -328,8 +333,13 @@
       fotos: estado.fotosNovas.slice(),
       descricao: $('#descricaoInput').value.trim()
     };
-    var quando = doCampoData($('#dataInput').value);
-    if (quando) dados.criadoEm = quando;
+    /* editar não muda a posição na fila: a data só é regravada se você
+       de fato escolheu outro dia */
+    var dia = $('#dataInput').value;
+    if (dia && dia !== estado.diaOriginal) {
+      var quando = doCampoData(dia);
+      if (quando) dados.criadoEm = quando;
+    }
 
     /* enquanto sobe as fotos, o botão mostra que está trabalhando */
     var botao = $('#salvarNovo');
@@ -473,6 +483,7 @@
     $('#nomeInput').value = c.nome;
     $('#descricaoInput').value = c.descricao;
     $('#dataInput').value = paraCampoData(c.criadoEm);
+    estado.diaOriginal = paraCampoData(c.criadoEm);   /* para saber se a data mudou */
     $('#salvarNovo').textContent = 'salvar alterações';
     pintarTagsNovas();
     pintarFotosNovas();
