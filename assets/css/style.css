@@ -204,7 +204,24 @@ body{
 .search-field:focus-within{box-shadow:2px 3px 0 rgba(19,42,76,.35)}
 
 /* liquid glass da galeria */
-.glass-bar{position:sticky;top:0;z-index:9;display:flex;justify-content:center;padding:4px 0 18px;margin:-6px 0 0}
+.glass-bar{
+  position:sticky;top:0;z-index:9;display:flex;align-items:center;justify-content:center;
+  padding:4px 0 18px;margin:-6px 0 0;
+}
+
+/* atalho de nova criação: canto esquerdo, na mesma linha da busca */
+.nova-galeria{
+  position:absolute;left:0;top:4px;height:46px;   /* mesma altura do campo */
+  display:flex;align-items:center;gap:9px;cursor:pointer;
+  padding:0 18px;border:var(--traco);border-radius:999px;
+  background:var(--amarelo-claro);color:var(--azul);
+  font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;
+  letter-spacing:.10em;text-transform:uppercase;
+  box-shadow:var(--relevo);
+  transition:transform .2s,background .2s,box-shadow .2s;
+}
+.nova-galeria:hover{background:var(--amarelo);transform:translateY(-2px)}
+.nova-galeria:active{transform:translate(2px,2px);box-shadow:1px 1px 0 rgba(19,42,76,.2)}
 .search-field.glass{
   flex:0 1 460px;
   background:rgba(255,255,255,.26);
@@ -891,3 +908,11 @@ body{
 .thumb.alvo{box-shadow:0 0 0 3px var(--amarelo),2px 3px 0 rgba(19,42,76,.18)}
 .thumb:not(.add){cursor:grab}
 
+
+@media (max-width:600px){
+  /* no celular o atalho entra na linha, encolhido, e a busca ocupa o resto */
+  .nova-galeria{position:static;height:42px;padding:0 14px;flex:none}
+  .nova-galeria .rotulo{display:none}
+  .glass-bar{gap:8px;justify-content:flex-start}
+  .search-field.glass{flex:1 1 auto}
+}

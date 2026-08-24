@@ -116,6 +116,12 @@
     $('#nomeInput').focus();
   }
   $('#newCardFace').addEventListener('click', abrirFormulario);
+
+  /* atalho da galeria: volta para o Início já com o formulário aberto */
+  $('#novaNaGaleria').addEventListener('click', function () {
+    irPara('inicio');
+    setTimeout(abrirFormulario, 620);
+  });
   $('#cancelNew').addEventListener('click', limparFormulario);
 
   /* ----- galeria de fotos do formulário (até 6) ----- */
@@ -319,16 +325,28 @@
     };
     var quando = doCampoData($('#dataInput').value);
     if (quando) dados.criadoEm = quando;
-    if (estado.edicao) {
-      await Store.atualizar(estado.edicao, dados);
-      toast('criação atualizada');
-    } else {
-      var nova = await Store.criar(dados);
-      if (!nova) return;   /* armazenamento cheio: o aviso ja apareceu */
-      toast('criação colada no caderno');
+
+    /* enquanto sobe as fotos, o botão mostra que está trabalhando */
+    var botao = $('#salvarNovo');
+    var rotulo = botao.textContent;
+    botao.disabled = true;
+    botao.textContent = estado.edicao ? 'salvando...' : 'colando...';
+
+    try {
+      if (estado.edicao) {
+        await Store.atualizar(estado.edicao, dados);
+        toast('criação atualizada');
+      } else {
+        var nova = await Store.criar(dados);
+        if (!nova) return;   /* deu erro: o aviso já apareceu */
+        toast('criação colada no caderno');
+      }
+      limparFormulario();
+      render();
+    } finally {
+      botao.disabled = false;
+      botao.textContent = rotulo;
     }
-    limparFormulario();
-    render();
   });
 
   /* ---------- busca ---------- */

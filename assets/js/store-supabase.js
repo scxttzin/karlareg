@@ -39,27 +39,30 @@
     return new Blob([buf], { type: tipo });
   }
 
-  /* sobe o que ainda é data URL e devolve a lista com URLs públicas */
+  /* sobe o que ainda é data URL e devolve a lista com URLs públicas.
+     Os envios vão todos juntos: em série, cada foto custava uma ida e volta. */
   async function subirFotos(criacaoId, fotos) {
-    var prontas = [];
-    for (var i = 0; i < fotos.length && i < MAX_FOTOS; i++) {
-      var f = fotos[i];
-      if (!f || !f.src) continue;
-      if (!ehDataUrl(f.src)) { prontas.push({ src: f.src, nota: f.nota || '' }); continue; }
+    var carimbo = Date.now();
+    return Promise.all(fotos.slice(0, MAX_FOTOS).map(async function (f, i) {
+      if (!f || !f.src) return null;
+      if (!ehDataUrl(f.src)) return { src: f.src, nota: f.nota || '' };
 
       var blob = dataUrlParaBlob(f.src);
       var ext = (blob.type.split('/')[1] || 'jpg').replace('jpeg', 'jpg');
-      var caminho = criacaoId + '/' + Date.now() + '-' + i + '.' + ext;
+      var caminho = criacaoId + '/' + carimbo + '-' + i + '.' + ext;
 
       var envio = await db.storage.from(BUCKET).upload(caminho, blob, {
         contentType: blob.type, upsert: true
       });
       if (envio.error) throw envio.error;
 
-      var publica = db.storage.from(BUCKET).getPublicUrl(caminho);
-      prontas.push({ src: publica.data.publicUrl, nota: f.nota || '' });
-    }
-    return prontas;
+      return {
+        src: db.storage.from(BUCKET).getPublicUrl(caminho).data.publicUrl,
+        nota: f.nota || ''
+      };
+    })).then(function (lista) {
+      return lista.filter(Boolean);
+    });
   }
 
   /* ---------- conversão banco -> formato do caderno ---------- */
@@ -91,29 +94,42 @@
 
   var SELECT = '*, fotos(*), tags(*), comentarios(*), curtidas(sessao)';
 
-  /* ---------- grava tags e fotos de uma criação ---------- */
-  async function regravarFilhos(id, dados) {
+  /* ---------- grava tags e fotos de uma criação ----------
+     Em criação nova (novo = true) não há o que apagar antes, e as duas
+     tabelas são gravadas ao mesmo tempo em vez de uma esperar a outra. */
+  async function regravarFilhos(id, dados, novo) {
+    var tarefas = [];
+
     if (dados.tags) {
-      var apagaTags = await db.from('tags').delete().eq('criacao_id', id);
-      if (apagaTags.error) throw apagaTags.error;
-      if (dados.tags.length) {
-        var insTags = await db.from('tags').insert(dados.tags.map(function (t) {
+      tarefas.push((async function () {
+        if (!novo) {
+          var apaga = await db.from('tags').delete().eq('criacao_id', id);
+          if (apaga.error) throw apaga.error;
+        }
+        if (!dados.tags.length) return;
+        var ins = await db.from('tags').insert(dados.tags.map(function (t) {
           return { criacao_id: id, chave: t.chave, valor: t.valor, cor: t.cor || 0 };
         }));
-        if (insTags.error) throw insTags.error;
-      }
+        if (ins.error) throw ins.error;
+      })());
     }
+
     if (dados.fotos) {
-      var fotos = await subirFotos(id, dados.fotos);
-      var apagaFotos = await db.from('fotos').delete().eq('criacao_id', id);
-      if (apagaFotos.error) throw apagaFotos.error;
-      if (fotos.length) {
-        var insFotos = await db.from('fotos').insert(fotos.map(function (f, i) {
+      tarefas.push((async function () {
+        var fotos = await subirFotos(id, dados.fotos);
+        if (!novo) {
+          var apaga = await db.from('fotos').delete().eq('criacao_id', id);
+          if (apaga.error) throw apaga.error;
+        }
+        if (!fotos.length) return;
+        var ins = await db.from('fotos').insert(fotos.map(function (f, i) {
           return { criacao_id: id, ordem: i, url: f.src, nota: f.nota };
         }));
-        if (insFotos.error) throw insFotos.error;
-      }
+        if (ins.error) throw ins.error;
+      })());
     }
+
+    await Promise.all(tarefas);
   }
 
   var SupabaseAdapter = {
@@ -142,8 +158,9 @@
         }).select().single();
         if (r.error) throw r.error;
 
-        await regravarFilhos(r.data.id, dados);
-        return this.obter(r.data.id);
+        await regravarFilhos(r.data.id, dados, true);
+        /* sem reler do banco: quem chama já vai atualizar a tela em seguida */
+        return { id: r.data.id, nome: r.data.nome };
       } catch (e) {
         console.error(e);
         if (typeof global.onErroBanco === 'function') global.onErroBanco(e);
