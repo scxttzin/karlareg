@@ -89,6 +89,10 @@
 
   function irPara(aba) {
     if (aba === estado.abaAtual) return;
+    /* indo para a Galeria com o formulário aberto, ele se fecha junto */
+    if (aba === 'galeria' && newCard && newCard.classList.contains('is-open')) {
+      limparFormulario();
+    }
     var inicio = $('#sheet-inicio');
     if (aba === 'galeria') inicio.classList.add('is-flipped');
     else inicio.classList.remove('is-flipped');
@@ -102,14 +106,21 @@
     b.addEventListener('click', function () { irPara(b.dataset.goto); });
   });
 
-  /* a barra da Galeria só aparece enquanto se rola; some sozinha depois */
+  /* a barra da Galeria aparece enquanto há movimento — rolagem ou mouse
+     andando — e some sozinha quando o cursor fica parado */
   (function () {
     var folha = $('#galeriaScroll'), sumir;
-    folha.addEventListener('scroll', function () {
+    function acordar() {
       folha.classList.add('rolando-agora');
       clearTimeout(sumir);
       sumir = setTimeout(function () { folha.classList.remove('rolando-agora'); }, 900);
-    }, { passive: true });
+    }
+    folha.addEventListener('scroll', acordar, { passive: true });
+    folha.addEventListener('pointermove', acordar, { passive: true });
+    folha.addEventListener('pointerleave', function () {
+      clearTimeout(sumir);
+      folha.classList.remove('rolando-agora');
+    });
   })();
 
   /* ---------- foto ---------- */
@@ -836,7 +847,8 @@
   document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape') {
       if (!$('#shareOverlay').hidden) fecharShare();
-      else fecharModal();
+      else if (!overlay.hidden) fecharModal();
+      else if (newCard.classList.contains('is-open')) limparFormulario();
       return;
     }
     /* setas passam as fotos do carrossel, menos enquanto se digita */

@@ -934,9 +934,9 @@ body{
   background:transparent;border-radius:9px;
   border:2px solid transparent;background-clip:content-box;
 }
-#galeriaScroll:hover,
+/* visível só enquanto há movimento — rolando ou com o mouse andando.
+   Parou, ela some sozinha (por isso não existe regra de :hover aqui). */
 #galeriaScroll.rolando-agora{scrollbar-color:var(--bege-2) transparent}
-#galeriaScroll:hover::-webkit-scrollbar-thumb,
 #galeriaScroll.rolando-agora::-webkit-scrollbar-thumb{background:var(--bege-2);background-clip:content-box}
 
 @media (max-width:600px){
