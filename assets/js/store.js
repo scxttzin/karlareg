@@ -36,6 +36,7 @@
 
     c.descricao = c.descricao || '';
     c.anotacao = c.anotacao || '';
+    c.fixado = !!c.fixado;
     c.likes = c.likes || 0;
     c.curtido = !!c.curtido;
     c.criadoEm = c.criadoEm || Date.now();
@@ -60,8 +61,12 @@
       }
     },
 
+    /* a fixada vem sempre primeiro; o resto, da mais nova para a mais antiga */
     listar: async function () {
-      return this._ler().sort(function (a, b) { return b.criadoEm - a.criadoEm; });
+      return this._ler().sort(function (a, b) {
+        if (a.fixado !== b.fixado) return a.fixado ? -1 : 1;
+        return b.criadoEm - a.criadoEm;
+      });
     },
 
     obter: async function (id) {
@@ -109,6 +114,15 @@
       if (!c) return null;
       c.comentarios.push({ texto: texto.slice(0, 45), data: Date.now() });
       return this.atualizar(id, { comentarios: c.comentarios });
+    },
+
+    /* fixar uma solta a anterior: só existe uma fixada por vez */
+    alternarFixado: async function (id) {
+      var lista = this._ler();
+      var virandoFixo = !lista.some(function (c) { return c.id === id && c.fixado; });
+      lista.forEach(function (c) { c.fixado = virandoFixo && c.id === id; });
+      this._gravar(lista);
+      return this.obter(id);
     },
 
     alternarCurtida: async function (id) {

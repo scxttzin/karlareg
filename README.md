@@ -183,3 +183,17 @@ O GitHub Pages republica em cerca de meio minuto. **Ao mexer em CSS ou JS,
 aumente o `?v=` dos arquivos no `index.html`** — o Pages entrega os assets com
 dez minutos de cache, e sem trocar esse número o visitante continua vendo a
 versão antiga.
+
+## Criação fixada
+
+Uma criação pode ficar presa no Início. No card aberto, ao lado do botão de
+fechar, o ícone de pino fixa ou solta. Regras:
+
+- só uma fixada por vez — fixar outra solta a anterior;
+- a fixada aparece à **esquerda** no Início e em **primeiro** na Galeria;
+- sem nenhuma fixada, o Início mostra as duas criações mais recentes;
+- no lugar da fita amarela, a fixada recebe um alfinete.
+
+Precisa da coluna no banco: rode [banco/fixar.sql](banco/fixar.sql) uma vez.
+Antes disso o botão aparece mas não grava — o índice parcial `so_uma_fixada`
+garante no próprio banco que nunca haja duas fixadas.

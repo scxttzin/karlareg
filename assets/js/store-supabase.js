@@ -88,6 +88,7 @@
         .map(function (m) { return { texto: m.texto, data: new Date(m.criado_em).getTime() }; }),
       likes: (linha.curtidas || []).length,
       curtido: (linha.curtidas || []).some(function (k) { return k.sessao === curtidasDoVisitante; }),
+      fixado: !!linha.fixado,
       criadoEm: new Date(linha.criado_em).getTime()
     };
   }
@@ -139,7 +140,10 @@
       var eu = sessao();
       var r = await db.from('criacoes').select(SELECT).order('criado_em', { ascending: false });
       if (r.error) { console.error(r.error); return []; }
-      return r.data.map(function (l) { return montar(l, eu); });
+      /* a ordenação da fixada é feita aqui, e não no banco, para o site
+         continuar funcionando mesmo antes de a coluna existir */
+      return r.data.map(function (l) { return montar(l, eu); })
+        .sort(function (a, b) { return (b.fixado ? 1 : 0) - (a.fixado ? 1 : 0); });
     },
 
     obter: async function (id) {
@@ -198,6 +202,29 @@
       var r = await db.from('comentarios')
         .insert({ criacao_id: id, texto: String(texto).slice(0, 45) });
       if (r.error) console.error(r.error);
+      return this.obter(id);
+    },
+
+    /* uma fixada por vez: solta a anterior antes de prender a nova */
+    alternarFixado: async function (id) {
+      var atual = await this.obter(id);
+      if (!atual) return null;
+      var ligar = !atual.fixado;
+
+      var solta = await db.from('criacoes').update({ fixado: false }).eq('fixado', true);
+      if (solta.error) {
+        console.error(solta.error);
+        if (typeof global.onErroBanco === 'function') global.onErroBanco(solta.error);
+        return null;
+      }
+      if (ligar) {
+        var prende = await db.from('criacoes').update({ fixado: true }).eq('id', id);
+        if (prende.error) {
+          console.error(prende.error);
+          if (typeof global.onErroBanco === 'function') global.onErroBanco(prende.error);
+          return null;
+        }
+      }
       return this.obter(id);
     },
 

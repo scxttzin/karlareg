@@ -71,8 +71,19 @@
     aviao: '<svg viewBox="0 0 24 24"><path d="M21 3 10.5 14.2"/><path d="M21 3 14.4 21l-3.9-6.8L3.6 10.4 21 3z"/></svg>',
     balao: '<svg viewBox="0 0 24 24"><path d="M20.5 12.2c0 4-3.8 7.2-8.5 7.2a10 10 0 0 1-2.9-.4L4 20.6l1.5-3.9a6.9 6.9 0 0 1-2-4.5C3.5 8.2 7.3 5 12 5s8.5 3.2 8.5 7.2z"/></svg>',
     lapis: '<svg viewBox="0 0 24 24"><path d="M15.6 4.4 19.6 8.4 8.6 19.4 4 20.6l1.2-4.6z"/><path d="M13.8 6.2 17.8 10.2"/></svg>',
-    lixo: '<svg viewBox="0 0 24 24"><path d="M4.5 6.5h15"/><path d="M9.5 6.5V4.6h5v1.9"/><path d="M6.4 6.5 7.3 20h9.4l.9-13.5"/></svg>'
+    lixo: '<svg viewBox="0 0 24 24"><path d="M4.5 6.5h15"/><path d="M9.5 6.5V4.6h5v1.9"/><path d="M6.4 6.5 7.3 20h9.4l.9-13.5"/></svg>',
+    pino: '<svg viewBox="0 0 24 24"><path d="M12 15.5V21"/><path d="M8.4 4.5h7.2l-1 5.2 2.7 2.6a1 1 0 0 1-.7 1.7H7.4a1 1 0 0 1-.7-1.7l2.7-2.6z"/></svg>'
   };
+
+  /* alfinete desenhado no mesmo traço do caderno: contorno azul e cabeça cheia */
+  var ALFINETE =
+    '<span class="alfinete" aria-hidden="true">' +
+      '<svg viewBox="0 0 44 52">' +
+        '<path class="agulha" d="M22 30 L22 49"/>' +
+        '<ellipse class="cabeca" cx="22" cy="19" rx="14" ry="13"/>' +
+        '<path class="brilho" d="M14 13.5a9 9 0 0 1 7-4.5"/>' +
+      '</svg>' +
+    '</span>';
 
   /* ---------- navegação entre folhas ---------- */
 
@@ -414,9 +425,10 @@
       ? '<img class="sticker-photo" src="' + c.foto + '" alt="' + esc(c.nome) + '">'
       : '<div class="sticker-photo"></div>';
     return '' +
-      '<article class="sticker" data-id="' + c.id + '"' +
+      '<article class="sticker' + (c.fixado ? ' fixado' : '') + '" data-id="' + c.id + '"' +
         ' data-fita="' + posicaoFita(c.id) + '"' +
         ' style="--tilt:' + inclinacao(c.id) + 'deg">' +
+        (c.fixado ? ALFINETE : '') +
         '<div class="sticker-foto-wrap">' + foto + '</div>' +
         '<div class="sticker-head">' +
           '<h3 class="sticker-name">' + esc(c.nome) + '</h3>' +
@@ -439,10 +451,18 @@
   async function render() {
     var lista = await Store.listar();
 
-    /* no Início ficam apenas as duas criações mais recentes */
-    var recentes = lista.slice(0, 2);
-    $('#recentes').innerHTML = recentes.map(htmlCard).join('');
-    $('#vazioInicio').hidden = recentes.length > 0;
+    /* Início: à esquerda a fixada (se houver), à direita a mais recente.
+       Sem nenhuma fixada, ficam as duas últimas, como antes. */
+    var fixada = lista.filter(function (c) { return c.fixado; })[0];
+    var destaque;
+    if (fixada) {
+      var maisNova = lista.filter(function (c) { return c.id !== fixada.id; })[0];
+      destaque = maisNova ? [fixada, maisNova] : [fixada];
+    } else {
+      destaque = lista.slice(0, 2);
+    }
+    $('#recentes').innerHTML = destaque.map(htmlCard).join('');
+    $('#vazioInicio').hidden = destaque.length > 0;
 
     var tGal = $('#busca-galeria').value.trim();
     var gal = lista.filter(function (c) { return combina(c, tGal); });
@@ -605,6 +625,8 @@
 
   function htmlModal(c) {
     return '' +
+      '<button class="modal-pin' + (c.fixado ? ' preso' : '') + '" data-m="fixar"' +
+        ' title="' + (c.fixado ? 'soltar do Início' : 'fixar no Início') + '">' + ICO.pino + '</button>' +
       '<button class="modal-close" data-fechar>&times;</button>' +
       '<div class="modal-grid">' +
         '<div>' +
@@ -746,6 +768,15 @@
           break;
         case 'compartilhar':
           abrirCompartilhar(c.id);
+          break;
+        case 'fixar':
+          var fixada = await Store.alternarFixado(c.id);
+          if (!fixada) { toast('não consegui fixar; confira o banco'); break; }
+          estado.cardAberto = fixada;
+          btn.classList.toggle('preso', fixada.fixado);
+          btn.title = fixada.fixado ? 'soltar do Início' : 'fixar no Início';
+          toast(fixada.fixado ? 'fixada no Início' : 'solta do Início');
+          render();
           break;
         case 'editar':
           editarCard(c.id);

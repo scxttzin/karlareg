@@ -141,10 +141,14 @@ body{
   position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;
   padding:34px 44px 30px;border-radius:inherit;
 }
-.dotted::before{
-  content:"";position:absolute;inset:0;pointer-events:none;
+/* o pontilhado é o fundo da própria folha, não uma camada por cima:
+   como camada absoluta ele tinha a altura da janela e sumia ao rolar.
+   Com background-attachment:local ele acompanha o papel até o fim. */
+.dotted{
   background-image:radial-gradient(circle, rgba(19,42,76,.17) 1.3px, transparent 1.3px);
-  background-size:24px 24px;background-position:12px 12px;
+  background-size:24px 24px;
+  background-position:12px 12px;
+  background-attachment:local;
 }
 .sheet-inner::-webkit-scrollbar{width:9px}
 .sheet-inner::-webkit-scrollbar-thumb{background:var(--bege-2);border-radius:9px}
@@ -988,4 +992,47 @@ body{
     font-size:9.5px;letter-spacing:.14em;line-height:2;
     padding:0 6px;margin:22px 0 4px;max-width:26em;margin-left:auto;margin-right:auto;
   }
+}
+
+/* ---------- criação fixada ---------- */
+/* no lugar da fita, um alfinete espetado no papel */
+.sticker.fixado::before{display:none}
+.alfinete{
+  position:absolute;top:-24px;left:50%;transform:translateX(-50%) rotate(-8deg);
+  width:34px;height:40px;z-index:3;pointer-events:none;
+  filter:drop-shadow(2px 3px 0 rgba(19,42,76,.22));
+}
+.alfinete svg{width:100%;height:100%;overflow:visible}
+.alfinete .cabeca{fill:var(--tag-vinho);stroke:var(--azul);stroke-width:2.5}
+.alfinete .agulha{
+  stroke:var(--azul);stroke-width:3.4;stroke-linecap:round;fill:none;
+}
+.alfinete .brilho{
+  stroke:rgba(255,255,255,.72);stroke-width:3;stroke-linecap:round;fill:none;
+}
+.sticker.fixado{border-color:var(--azul)}
+
+/* botão de pino, ao lado do fechar do card aberto */
+.modal-pin{
+  position:absolute;top:16px;right:62px;z-index:4;
+  width:36px;height:36px;border:2px solid var(--azul);border-radius:50%;
+  background:var(--papel);cursor:pointer;color:var(--azul);
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:3px 3px 0 rgba(19,42,76,.2);
+  transition:background .2s,transform .2s,color .2s;
+}
+.modal-pin svg{
+  width:19px;height:19px;fill:none;stroke:currentColor;
+  stroke-width:2;stroke-linecap:round;stroke-linejoin:round;
+}
+.modal-pin:hover{background:var(--amarelo-claro)}
+.modal-pin.preso{
+  background:var(--tag-vinho);color:var(--branco);border-color:var(--azul);
+}
+.modal-pin.preso svg{fill:rgba(255,255,255,.25)}
+
+@media (max-width:600px){
+  .modal-pin{top:10px;right:50px;width:32px;height:32px}
+  .modal-pin svg{width:17px;height:17px}
+  .alfinete{width:30px;height:36px;top:-21px}
 }
