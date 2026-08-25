@@ -1042,3 +1042,37 @@ body{
 .recentes .coluna .block-title{margin:0 0 12px}
 .recentes .coluna .sticker{width:100%}
 .recentes-bloco.com-fixada > .block-title{display:none}
+
+/* ---------- escolhas da imagem de compartilhar ---------- */
+.story-opcoes{
+  display:flex;flex-direction:column;gap:10px;
+  margin:16px 0 4px;padding:12px 14px;
+  border:2px solid var(--azul);border-radius:16px;background:var(--bege);
+}
+.story-opcoes .grupo{display:flex;align-items:center;gap:10px;justify-content:space-between}
+.story-opcoes .grupo > span{
+  font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;font-weight:700;opacity:.65;
+}
+.story-opcoes .grupo > div{display:flex;gap:7px}
+.story-opcoes .op{
+  border:2px solid var(--azul);border-radius:999px;background:var(--papel);
+  color:var(--azul);cursor:pointer;padding:6px 13px;
+  font-family:'Nunito',sans-serif;font-size:10.5px;font-weight:700;
+  letter-spacing:.06em;text-transform:uppercase;
+  transition:background .18s,transform .18s,box-shadow .18s;
+}
+.story-opcoes .op:hover{transform:translateY(-1px)}
+.story-opcoes .op.is-on{background:var(--azul);color:var(--branco)}
+/* as amostras de cor são bolinhas com a própria cor dentro */
+.story-opcoes .cores .op{
+  width:28px;height:28px;padding:0;border-radius:50%;
+  background:var(--amostra);
+}
+.story-opcoes .cores .op.is-on{
+  box-shadow:0 0 0 3px var(--amarelo);background:var(--amostra);
+}
+
+@media (max-width:600px){
+  .story-opcoes{padding:10px 12px;gap:8px}
+  .story-opcoes .op{padding:5px 10px;font-size:10px}
+}

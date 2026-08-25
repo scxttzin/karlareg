@@ -856,9 +856,35 @@
     if (!c) return;
     var link = location.href.split('#')[0] + '#/criacao/' + c.id;
 
+    var op = lerOpcoesStory();
+
+    function botoes(grupo, itens) {
+      return itens.map(function (i) {
+        var ligado = op[grupo] === i.v ? ' is-on' : '';
+        return '<button type="button" class="op' + ligado + '"' +
+          ' data-grupo="' + grupo + '" data-valor="' + i.v + '"' +
+          (i.cor ? ' style="--amostra:' + i.cor + '"' : '') +
+          '>' + i.r + '</button>';
+      }).join('');
+    }
+
     $('#shareBox').innerHTML =
       '<p class="block-title" style="margin-top:0">compartilhar</p>' +
       '<canvas id="storyCanvas" width="1080" height="1920"></canvas>' +
+      '<div class="story-opcoes" id="storyOpcoes">' +
+        '<div class="grupo cores"><span>fundo</span><div>' +
+          botoes('fundo', [
+            { v: 'bege', r: '', cor: TEMAS.bege.fundo },
+            { v: 'verde', r: '', cor: TEMAS.verde.fundo },
+            { v: 'azul', r: '', cor: TEMAS.azul.fundo }
+          ]) + '</div></div>' +
+        '<div class="grupo"><span>papel</span><div>' +
+          botoes('textura', [{ v: 'bolinhas', r: 'bolinhas' }, { v: 'pauta', r: 'pauta' }]) +
+          '</div></div>' +
+        '<div class="grupo"><span>adesivo</span><div>' +
+          botoes('adesivo', [{ v: 'fita', r: 'fita' }, { v: 'alfinete', r: 'alfinete' }]) +
+          '</div></div>' +
+      '</div>' +
       '<div class="share-link"><input id="linkInput" readonly value="' + esc(link) + '">' +
       '<button class="mini-btn" id="copiarLink">copiar</button></div>' +
       '<div class="share-actions">' +
@@ -867,7 +893,18 @@
       '</div>';
     shareOverlay.hidden = false;
 
-    await desenharStory($('#storyCanvas'), c);
+    await desenharStory($('#storyCanvas'), c, op);
+
+    $('#storyOpcoes').addEventListener('click', async function (e) {
+      var b = e.target.closest('.op');
+      if (!b) return;
+      op[b.dataset.grupo] = b.dataset.valor;
+      guardarOpcoesStory(op);
+      $$('.op[data-grupo="' + b.dataset.grupo + '"]', $('#storyOpcoes')).forEach(function (o) {
+        o.classList.toggle('is-on', o === b);
+      });
+      await desenharStory($('#storyCanvas'), c, op);
+    });
 
     $('#fecharShare').addEventListener('click', fecharShare);
     $('#copiarLink').addEventListener('click', function () {
@@ -887,12 +924,47 @@
     return new Promise(function (res) {
       if (!src) return res(null);
       var img = new Image();
+      /* sem isto, a foto vinda do Storage contamina o canvas e o
+         "baixar imagem" morre com SecurityError */
+      if (!/^data:/.test(src)) img.crossOrigin = 'anonymous';
       img.onload = function () { res(img); };
-      img.onerror = function () { res(null); };
+      img.onerror = function () {
+        /* se o CORS falhar, tenta sem ele: a imagem aparece na prévia,
+           só o download é que não vai funcionar */
+        var semCors = new Image();
+        semCors.onload = function () { res(semCors); };
+        semCors.onerror = function () { res(null); };
+        semCors.src = src;
+      };
       img.src = src;
     });
   }
 
+
+  /* ---------- imagem de compartilhar: fundo, papel e adesivo ---------- */
+  var TEMAS = {
+    bege:  { fundo: '#EFE3CE', traco: 'rgba(19,42,76,.16)',
+             faixa: '#132A4C', faixaTexto: '#FFFDF8' },
+    verde: { fundo: '#D5DED0', traco: 'rgba(19,42,76,.18)',
+             faixa: '#4A5A48', faixaTexto: '#FFFDF8' },
+    azul:  { fundo: '#132A4C', traco: 'rgba(255,255,255,.20)',
+             faixa: '#FFFDF8', faixaTexto: '#132A4C', faixaBorda: '#132A4C' }
+  };
+  var PADRAO_STORY = { fundo: 'bege', textura: 'bolinhas', adesivo: 'fita' };
+
+  function lerOpcoesStory() {
+    try {
+      var g = JSON.parse(localStorage.getItem('karlareg.story')) || {};
+      return {
+        fundo: TEMAS[g.fundo] ? g.fundo : PADRAO_STORY.fundo,
+        textura: g.textura === 'pauta' ? 'pauta' : 'bolinhas',
+        adesivo: g.adesivo === 'alfinete' ? 'alfinete' : 'fita'
+      };
+    } catch (e) { return Object.assign({}, PADRAO_STORY); }
+  }
+  function guardarOpcoesStory(op) {
+    try { localStorage.setItem('karlareg.story', JSON.stringify(op)); } catch (e) {}
+  }
 
   /* quebra o texto na largura dada, com reticencias na ultima linha */
   function quebrarTexto(g, texto, largura, maxLinhas) {
@@ -931,18 +1003,29 @@
     g.closePath();
   }
 
-  async function desenharStory(cv, c) {
+  async function desenharStory(cv, c, op) {
+    op = op || lerOpcoesStory();
+    var tema = TEMAS[op.fundo] || TEMAS.bege;
     var g = cv.getContext('2d');
     var W = cv.width, H = cv.height;
     var AZUL = '#132A4C';
 
-    /* papel em dot grid */
-    g.fillStyle = '#EFE3CE';
+    /* fundo escolhido */
+    g.fillStyle = tema.fundo;
     g.fillRect(0, 0, W, H);
-    g.fillStyle = 'rgba(19,42,76,.16)';
-    for (var y = 40; y < H; y += 48) {
-      for (var x = 40; x < W; x += 48) {
-        g.beginPath(); g.arc(x, y, 3, 0, Math.PI * 2); g.fill();
+
+    /* textura do papel */
+    if (op.textura === 'pauta') {
+      g.strokeStyle = tema.traco; g.lineWidth = 2.5;
+      for (var yl = 96; yl < H; yl += 56) {
+        g.beginPath(); g.moveTo(70, yl); g.lineTo(W - 70, yl); g.stroke();
+      }
+    } else {
+      g.fillStyle = tema.traco;
+      for (var y = 40; y < H; y += 48) {
+        for (var x = 40; x < W; x += 48) {
+          g.beginPath(); g.arc(x, y, 3, 0, Math.PI * 2); g.fill();
+        }
       }
     }
 
@@ -978,14 +1061,25 @@
     bloco(g, cx, cy, cw, ch, r); g.fill();
     g.lineWidth = 8; g.strokeStyle = AZUL; g.stroke();
 
-    /* fita colante */
+    /* fita colante ou alfinete, conforme a escolha */
     g.save();
     g.translate(cx + cw / 2, cy);
-    g.rotate(-0.045);
-    g.fillStyle = 'rgba(242,194,48,.85)';
-    g.fillRect(-150, -38, 300, 76);
-    g.lineWidth = 6; g.strokeStyle = AZUL;
-    g.strokeRect(-150, -38, 300, 76);
+    if (op.adesivo === 'alfinete') {
+      g.rotate(-0.13);
+      g.lineWidth = 11; g.strokeStyle = AZUL; g.lineCap = 'round';
+      g.beginPath(); g.moveTo(0, 18); g.lineTo(0, 96); g.stroke();   /* agulha */
+      g.beginPath(); g.ellipse(0, -12, 46, 42, 0, 0, Math.PI * 2);
+      g.fillStyle = '#7B2E3A'; g.fill();
+      g.lineWidth = 8; g.strokeStyle = AZUL; g.stroke();
+      g.beginPath(); g.arc(-14, -26, 22, Math.PI * 1.05, Math.PI * 1.55);
+      g.lineWidth = 9; g.strokeStyle = 'rgba(255,255,255,.72)'; g.stroke();
+    } else {
+      g.rotate(-0.045);
+      g.fillStyle = 'rgba(242,194,48,.85)';
+      g.fillRect(-150, -38, 300, 76);
+      g.lineWidth = 6; g.strokeStyle = AZUL;
+      g.strokeRect(-150, -38, 300, 76);
+    }
     g.restore();
 
     /* foto */
@@ -1036,17 +1130,19 @@
       });
     }
 
-    /* assinatura */
+    /* assinatura — a faixa inverte no fundo escuro, para não sumir */
     var fy = cy + ch + 90, fh = 180;
-    g.fillStyle = AZUL;
+    g.fillStyle = tema.faixa;
     bloco(g, cx, fy, cw, fh, 44); g.fill();
+    if (tema.faixaBorda) { g.lineWidth = 6; g.strokeStyle = tema.faixaBorda; g.stroke(); }
     g.textAlign = 'center';
-    g.fillStyle = '#FFFDF8';
+    g.fillStyle = tema.faixaTexto;
     g.font = '700 92px Caveat, cursive';
     g.fillText('KarlaReg', cx + cw / 2, fy + 88);
     g.font = '700 30px Nunito, sans-serif';
-    g.fillStyle = 'rgba(255,253,248,.80)';
+    g.globalAlpha = .8;
     g.fillText('I N S T A G R A M   ·   @ K A R L A R E G', cx + cw / 2, fy + 140);
+    g.globalAlpha = 1;
   }
 
   /* ---------- exemplos iniciais ---------- */
