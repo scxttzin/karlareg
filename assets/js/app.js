@@ -454,15 +454,24 @@
     /* Início: à esquerda a fixada (se houver), à direita a mais recente.
        Sem nenhuma fixada, ficam as duas últimas, como antes. */
     var fixada = lista.filter(function (c) { return c.fixado; })[0];
-    var destaque;
+    var bloco = $('#recentesBloco');
+    bloco.classList.toggle('com-fixada', !!fixada);
+
     if (fixada) {
+      /* com uma fixada, cada coluna ganha seu próprio rótulo */
       var maisNova = lista.filter(function (c) { return c.id !== fixada.id; })[0];
-      destaque = maisNova ? [fixada, maisNova] : [fixada];
+      var colunas = [['fixado', fixada]];
+      if (maisNova) colunas.push(['criação recente', maisNova]);
+      $('#recentes').innerHTML = colunas.map(function (par) {
+        return '<div class="coluna"><p class="block-title">' + par[0] + '</p>' +
+          htmlCard(par[1]) + '</div>';
+      }).join('');
+      $('#vazioInicio').hidden = true;
     } else {
-      destaque = lista.slice(0, 2);
+      var destaque = lista.slice(0, 2);
+      $('#recentes').innerHTML = destaque.map(htmlCard).join('');
+      $('#vazioInicio').hidden = destaque.length > 0;
     }
-    $('#recentes').innerHTML = destaque.map(htmlCard).join('');
-    $('#vazioInicio').hidden = destaque.length > 0;
 
     var tGal = $('#busca-galeria').value.trim();
     var gal = lista.filter(function (c) { return combina(c, tGal); });
@@ -771,7 +780,7 @@
           break;
         case 'fixar':
           var fixada = await Store.alternarFixado(c.id);
-          if (!fixada) { toast('não consegui fixar; confira o banco'); break; }
+          if (!fixada) { toast('falta rodar banco/fixar.sql no Supabase'); break; }
           estado.cardAberto = fixada;
           btn.classList.toggle('preso', fixada.fixado);
           btn.title = fixada.fixado ? 'soltar do Início' : 'fixar no Início';

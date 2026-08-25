@@ -998,8 +998,8 @@ body{
 /* no lugar da fita, um alfinete espetado no papel */
 .sticker.fixado::before{display:none}
 .alfinete{
-  position:absolute;top:-24px;left:50%;transform:translateX(-50%) rotate(-8deg);
-  width:34px;height:40px;z-index:3;pointer-events:none;
+  position:absolute;top:-27px;left:50%;transform:translateX(-50%) rotate(-8deg);
+  width:40px;height:46px;z-index:3;pointer-events:none;
   filter:drop-shadow(2px 3px 0 rgba(19,42,76,.22));
 }
 .alfinete svg{width:100%;height:100%;overflow:visible}
@@ -1036,3 +1036,9 @@ body{
   .modal-pin svg{width:17px;height:17px}
   .alfinete{width:30px;height:36px;top:-21px}
 }
+
+/* com uma criação fixada, cada coluna do Início tem seu próprio rótulo */
+.recentes .coluna{min-width:0;display:flex;flex-direction:column}
+.recentes .coluna .block-title{margin:0 0 12px}
+.recentes .coluna .sticker{width:100%}
+.recentes-bloco.com-fixada > .block-title{display:none}
