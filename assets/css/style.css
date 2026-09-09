@@ -452,20 +452,27 @@ body{
 .social .spacer{flex:1}
 .card-tools{display:flex;gap:6px;flex:none}
 /* botao redondo: em repouso a bolinha e invisivel e so o traco aparece;
-   ao passar o mouse ela se acende — cinza no lapis, vermelha na lixeira */
-.card-tools button{
+   ao passar o mouse ela se acende — cinza no lapis, vermelha na lixeira.
+   Vale para todo lapis do caderno: card fechado, card aberto, nota da foto
+   e anotacao manuscrita. */
+.card-tools button,
+.edit-nota{
   background:transparent;border:none;cursor:pointer;color:var(--azul);opacity:.45;
   width:28px;height:28px;padding:0;border-radius:50%;
   display:inline-flex;align-items:center;justify-content:center;
   transition:background-color .18s,color .18s,opacity .18s,transform .18s;
 }
-.card-tools button:hover{opacity:1}
-.card-tools button:focus-visible{opacity:1;outline:2px solid var(--azul);outline-offset:2px}
+.card-tools button:hover,
+.edit-nota:hover{opacity:1}
+.card-tools button:focus-visible,
+.edit-nota:focus-visible{opacity:1;outline:2px solid var(--azul);outline-offset:2px}
 .card-tools [data-acao="editar"]:hover,
-.card-tools [data-m="editar"]:hover{background:var(--tag-cinza);color:var(--azul);transform:scale(1.06)}
+.card-tools [data-m="editar"]:hover,
+.edit-nota:hover{background:var(--tag-cinza);color:var(--azul);transform:scale(1.06)}
 .card-tools [data-acao="excluir"]:hover,
 .card-tools [data-m="excluir"]:hover{background:var(--vermelho);color:var(--branco);transform:scale(1.06)}
-.card-tools svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.card-tools svg,
+.edit-nota svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 
 .empty-note{position:relative;z-index:2;font-family:'Patrick Hand',cursive;font-size:18px;opacity:.45}
 
@@ -530,15 +537,8 @@ body{
 .nota-vista{
   display:flex;align-items:flex-start;gap:10px;margin-top:14px;
 }
-.nota-vista .edit-nota{
-  flex:none;background:none;border:none;cursor:pointer;color:var(--azul);
-  opacity:.45;padding:2px;margin-top:2px;
-}
-.nota-vista .edit-nota:hover{opacity:1}
-.nota-vista .edit-nota svg{
-  width:17px;height:17px;fill:none;stroke:currentColor;
-  stroke-width:2;stroke-linecap:round;stroke-linejoin:round;
-}
+.nota-vista .edit-nota{flex:none;margin-top:1px}
+.nota-vista .edit-nota svg{width:17px;height:17px}
 /* letra das notas de foto: Babydoll quando instalada */
 .nota-texto{
   margin:0;flex:1;min-width:0;
