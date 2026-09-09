@@ -656,9 +656,12 @@
             '<button data-m="comentar">' + ICO.balao + '<span>' + c.comentarios.length + '</span></button>' +
             '<button data-m="compartilhar">' + ICO.aviao + '</button>' +
             '<span class="spacer"></span>' +
-            '<span class="card-tools">' +
-              '<button data-m="editar">' + ICO.lapis + '</button>' +
-              '<button data-m="excluir">' + ICO.lixo + '</button>' +
+            /* no card ampliado os dois ganham nome ao lado do icone */
+            '<span class="card-tools com-rotulo">' +
+              '<button data-m="editar" title="editar">' + ICO.lapis +
+                '<span class="rotulo">editar</span></button>' +
+              '<button data-m="excluir" title="excluir">' + ICO.lixo +
+                '<span class="rotulo">excluir</span></button>' +
             '</span>' +
           '</div>' +
         '</div>' +

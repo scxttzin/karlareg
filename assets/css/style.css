@@ -474,6 +474,17 @@ body{
 .card-tools svg,
 .edit-nota svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 
+/* ---------- card ampliado: editar e excluir com nome ao lado ----------
+   Só aqui os dois viram pastilha: a bolinha do ícone cresce para trás da
+   palavra ao passar o mouse. Nas figurinhas fechadas continua só a bolinha. */
+.card-tools.com-rotulo{gap:4px}
+.card-tools.com-rotulo button{
+  width:auto;height:30px;padding:0 11px;gap:7px;border-radius:999px;
+  font-family:'Nunito',sans-serif;font-weight:700;font-size:11px;
+  letter-spacing:.14em;text-transform:uppercase;
+}
+.card-tools.com-rotulo .rotulo{line-height:1;white-space:nowrap}
+
 .empty-note{position:relative;z-index:2;font-family:'Patrick Hand',cursive;font-size:18px;opacity:.45}
 
 /* ---------- overlay / modal ---------- */
