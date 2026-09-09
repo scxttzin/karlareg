@@ -1376,8 +1376,8 @@ body{
    Desenhada no mesmo traco dos outros icones, entao segue a cor da etiqueta:
    escura na fechada, branca na aberta, sem precisar de filtro. */
 .tab .pata{
-  position:absolute;left:50%;bottom:9px;transform:translateX(-50%) rotate(-8deg);
-  width:27px;height:27px;pointer-events:none;
+  position:absolute;left:50%;bottom:5px;transform:translateX(-50%) rotate(-8deg);
+  width:37px;height:37px;pointer-events:none;
   fill:none;stroke:currentColor;stroke-width:1.5;
   stroke-linecap:round;stroke-linejoin:round;
   opacity:.6;
@@ -1387,7 +1387,7 @@ body{
 .tab.is-active .pata{opacity:0;transform:translateX(-50%) rotate(-8deg) scale(.8)}
 /* o nome sobe um pouco para nao esbarrar na patinha */
 @media (min-width:601px){
-  .tab[data-goto="luna"] span{transform:translateY(-16px)}
+  .tab[data-goto="luna"] span{transform:translateY(-19px)}
 }
 
 
