@@ -1065,7 +1065,31 @@
     var alturaTexto = usaDescricao
       ? (linhasTexto.length ? linhasTexto.length * 54 + 12 : 0)
       : (linhasTags ? linhasTags * 78 + 10 : 0);
-    var ch = pad + 30 + ih + 130 + alturaTexto + pad;
+
+    /* o nome estourava a largura do card quando era comprido: primeiro
+       ele encolhe, e só se ainda não couber é que quebra em duas linhas */
+    var tamTitulo = 92;
+    g.font = '700 ' + tamTitulo + 'px Caveat, cursive';
+    while (tamTitulo > 58 && g.measureText(c.nome).width > iw) {
+      tamTitulo -= 4;
+      g.font = '700 ' + tamTitulo + 'px Caveat, cursive';
+    }
+    var linhasTitulo = [c.nome];
+    if (g.measureText(c.nome).width > iw) {
+      linhasTitulo = quebrarTexto(g, c.nome, iw, 2);
+    }
+    /* nome de uma palavra só não tem onde quebrar: corta com reticências */
+    linhasTitulo = linhasTitulo.map(function (linha) {
+      if (g.measureText(linha).width <= iw) return linha;
+      while (linha.length > 1 && g.measureText(linha + '...').width > iw) {
+        linha = linha.slice(0, -1);
+      }
+      return linha + '...';
+    });
+    var alturaLinhaTitulo = Math.round(tamTitulo * 0.92);
+    var extraTitulo = (linhasTitulo.length - 1) * alturaLinhaTitulo;
+
+    var ch = pad + 30 + ih + 130 + extraTitulo + alturaTexto + pad;
     var cy = Math.max(200, Math.round((H - ch - 270) / 2));
     g.fillStyle = 'rgba(19,42,76,.30)';
     bloco(g, cx + 20, cy + 24, cw, ch, r); g.fill();
@@ -1109,23 +1133,25 @@
     g.lineWidth = 6; g.strokeStyle = AZUL;
     bloco(g, ix, iy, iw, ih, 36); g.stroke();
 
-    /* nome */
+    /* nome — no tamanho que coube, em uma ou duas linhas */
     g.fillStyle = AZUL;
     g.textAlign = 'left';
-    g.font = '700 92px Caveat, cursive';
-    g.fillText(c.nome, ix, iy + ih + 104);
+    g.font = '700 ' + tamTitulo + 'px Caveat, cursive';
+    linhasTitulo.forEach(function (linha, k) {
+      g.fillText(linha, ix, iy + ih + 104 + k * alturaLinhaTitulo);
+    });
 
     if (usaDescricao) {
       /* descrição geral logo abaixo do nome */
       g.font = '40px "Patrick Hand", cursive';
       g.fillStyle = 'rgba(19,42,76,.82)';
       linhasTexto.forEach(function (linha, k) {
-        g.fillText(linha, ix, iy + ih + 158 + k * 54);
+        g.fillText(linha, ix, iy + ih + 158 + extraTitulo + k * 54);
       });
     } else {
       /* sem descrição, as tags ocupam o lugar para não ficar vazio */
       var cores = ['#7C8C7A', '#7B2E3A', '#A8C6E0', '#D5D1C8'];
-      var tx = ix, ty = iy + ih + 148;
+      var tx = ix, ty = iy + ih + 148 + extraTitulo;
       g.font = '36px "Patrick Hand", cursive';
       g.lineWidth = 5;
       tagsVisiveis.forEach(function (t) {
