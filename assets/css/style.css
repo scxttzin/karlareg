@@ -33,7 +33,6 @@
 
 *{box-sizing:border-box}
 html,body{height:100%}
-html,body{overflow-x:hidden}   /* o rabo da Luna passa da borda do bloco */
 /* a mesa é uma folha de caderno bege pautada */
 body{
   margin:0;
@@ -49,15 +48,9 @@ body{
 }
 
 /* ---------- fichário ---------- */
-/* o caderno e o Luna Notes dividem a mesa; sem o bloco, o caderno volta
-   sozinho ao centro, como era antes */
-.desk{
-  min-height:100%;display:flex;align-items:center;justify-content:center;
-  gap:clamp(18px,2vw,30px);padding:26px 18px;
-}
+.desk{min-height:100%;display:flex;align-items:center;justify-content:center;padding:26px 18px}
 .binder{
-  position:relative;flex:1 1 auto;min-width:0;
-  width:min(1220px,100%);height:min(88vh,900px);
+  position:relative;width:min(1220px,100%);height:min(88vh,900px);
   background:linear-gradient(160deg,#1B3757 0%,#132A4C 60%,#0E2340 100%);
   border-radius:30px;
   padding:20px 104px 26px 26px;
@@ -104,6 +97,7 @@ body{
 }
 .tab span{writing-mode:vertical-rl;margin-left:4px}
 .tab:nth-child(2){background:linear-gradient(180deg,#C9DCEC 0%,var(--tag-azul) 55%,#8FB4D4 100%)}
+.tab:nth-child(3){background:linear-gradient(180deg,#DCE5DA 0%,#C2D0BF 55%,#A6B8A3 100%)}
 .tab:hover{transform:translateX(5px)}
 .tab.is-active{
   z-index:6;   /* a aba aberta vem para cima do papel */
@@ -136,14 +130,16 @@ body{
 }
 .sheet.is-flipped::after{opacity:1}
 .sheet.is-front{z-index:3}
-.sheet.is-front.is-flipped{transform:rotateY(-172deg)}
-.sheet.is-flipped{box-shadow:0 6px 14px rgba(6,20,40,.18)}
-.sheet#sheet-galeria{z-index:1}
+.sheet.is-flipped{transform:rotateY(-172deg);box-shadow:0 6px 14px rgba(6,20,40,.18)}
+.sheet#sheet-galeria{z-index:2}
+.sheet#sheet-luna{z-index:1}
 
 /* dentro de um contexto preserve-3d a folha de tras continua recebendo cliques
    mesmo pintada atras, entao a folha inativa fica sem eventos */
-.pages[data-aba="inicio"] #sheet-galeria{pointer-events:none}
-.pages[data-aba="galeria"] #sheet-inicio{pointer-events:none}
+.pages .sheet{pointer-events:none}
+.pages[data-aba="inicio"] #sheet-inicio,
+.pages[data-aba="galeria"] #sheet-galeria,
+.pages[data-aba="luna"] #sheet-luna{pointer-events:auto}
 
 .sheet-inner{
   position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;
@@ -1239,128 +1235,6 @@ body{
   .tab:hover{transform:none}
 }
 
-/* ================= LUNA NOTES ================= */
-/* Bloco de notas ao lado do caderno. Só aparece quando a tela tem largura
-   sobrando: abaixo de 1200px ele some e o caderno fica com a mesa inteira,
-   que é o caso do notebook mais apertado. */
-.luna{display:none}
-
-@media (min-width:1200px){
-  /* folga à direita para o rabo da Luna não bater na borda da janela */
-  .desk{padding-right:86px}
-}
-
-@media (min-width:1200px){
-  .luna{
-    display:block;position:relative;
-    flex:0 0 clamp(280px,23vw,352px);
-    height:min(88vh,900px);
-  }
-
-  /* ----- a gata atrás do bloco ----- */
-  .luna .pelo,.luna .pelo-fundo{fill:#F6F1E8}
-  .luna .pelo-cinza{fill:#CBD0D4}
-  .luna .cabeca{fill:#F6F1E8}
-  .luna .pelo,.luna .cabeca{stroke:var(--azul);stroke-width:3.4;stroke-linejoin:round}
-  .luna .tufo{fill:none;stroke:var(--azul);stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
-  .luna .contorno{fill:none;stroke:var(--azul);stroke-width:3.6;stroke-linecap:round;stroke-linejoin:round}
-
-  .luna-orelhas{
-    position:absolute;z-index:0;top:-44px;left:50%;transform:translateX(-50%);
-    width:190px;height:auto;filter:drop-shadow(0 6px 10px rgba(6,20,40,.20));
-  }
-  .luna-rabo{
-    position:absolute;z-index:0;right:-66px;bottom:58px;
-    width:112px;height:auto;transform:rotate(6deg);
-    filter:drop-shadow(0 6px 10px rgba(6,20,40,.18));
-  }
-
-  /* ----- o bloco ----- */
-  .luna-bloco{
-    position:relative;z-index:1;height:100%;
-    display:flex;flex-direction:column;
-    background:linear-gradient(170deg,#BFD7EA 0%,var(--tag-azul) 60%,#93B6D6 100%);
-    border-radius:26px;padding:18px 16px 14px;
-    box-shadow:0 22px 46px rgba(6,20,40,.28), inset 0 2px 0 rgba(255,255,255,.45);
-  }
-
-  .luna-topo{
-    display:flex;align-items:baseline;justify-content:space-between;gap:10px;
-    background:var(--branco);border:2.5px solid var(--azul);border-radius:14px;
-    padding:8px 13px;box-shadow:3px 3px 0 rgba(19,42,76,.22);
-  }
-  .luna-nome{
-    margin:0;font-family:'Caveat',cursive;font-weight:700;font-size:25px;line-height:1;
-  }
-  .luna-data{
-    margin:0;font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;
-    font-weight:700;opacity:.5;white-space:nowrap;
-  }
-
-  /* ----- barra de formatação, no espírito do Notes ----- */
-  .luna-barra{
-    display:flex;align-items:center;gap:3px;margin:12px 0 10px;
-    background:rgba(255,253,248,.72);border:2px solid var(--azul);border-radius:999px;
-    padding:4px 7px;
-  }
-  .luna-barra button{
-    flex:none;width:29px;height:29px;padding:0;border:none;border-radius:50%;
-    background:transparent;color:var(--azul);cursor:pointer;
-    display:inline-flex;align-items:center;justify-content:center;
-    font-family:'Nunito',sans-serif;font-size:14px;line-height:1;
-    transition:background-color .16s,color .16s,transform .16s;
-  }
-  .luna-barra button:hover{background:rgba(19,42,76,.12)}
-  .luna-barra button.is-on{background:var(--azul);color:var(--branco)}
-  .luna-barra button svg{
-    width:16px;height:16px;fill:none;stroke:currentColor;
-    stroke-width:2;stroke-linecap:round;stroke-linejoin:round;
-  }
-  .luna-barra .risco{width:1px;height:17px;background:rgba(19,42,76,.28);margin:0 3px}
-
-  /* ----- folha quadriculada ----- */
-  .luna-folha{
-    flex:1;min-height:0;overflow:hidden;
-    background:#FDFCF7;
-    background-image:
-      linear-gradient(rgba(19,42,76,.10) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(19,42,76,.10) 1px, transparent 1px);
-    background-size:19px 19px;
-    border:2.5px solid var(--azul);
-    /* cantos levemente tortos, como um papel arrancado */
-    border-radius:16px 13px 18px 14px;
-    box-shadow:inset 0 2px 8px rgba(19,42,76,.08);
-  }
-  .luna-texto{
-    height:100%;overflow-y:auto;outline:none;
-    padding:14px 15px;
-    font-family:'Patrick Hand',cursive;font-size:17px;line-height:19px;
-    color:var(--azul);overflow-wrap:anywhere;
-  }
-  .luna-texto:empty::before{
-    content:attr(data-vazio);opacity:.38;pointer-events:none;
-  }
-  .luna-texto ul{margin:0 0 0 4px;padding-left:18px}
-  .luna-texto li{margin:0}
-  .luna-texto mark{background:var(--amarelo-claro);color:inherit;padding:0 2px;border-radius:3px}
-  .luna-texto::-webkit-scrollbar{width:8px}
-  .luna-texto::-webkit-scrollbar-thumb{background:rgba(19,42,76,.22);border-radius:8px}
-  .luna-texto::-webkit-scrollbar-track{background:transparent}
-
-  .luna-status{
-    margin:8px 4px 0;height:13px;
-    font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;
-    font-weight:700;opacity:.55;text-align:right;
-  }
-}
-
-/* telas bem largas: o bloco cresce um pouco, sem engolir o caderno */
-@media (min-width:1700px){
-  .luna{flex-basis:392px}
-  .luna-orelhas{width:210px;top:-48px}
-  .luna-rabo{width:124px;right:-74px}
-}
-
 /* ---------- caderno estreito por causa do Luna Notes ----------
    A folha se mede a si mesma: com o bloco de notas ao lado o caderno perde
    largura sem a janela mudar de tamanho, então quem manda no Início é a
@@ -1386,4 +1260,72 @@ body{
   .nova-galeria{position:static;height:42px;padding:0 14px;flex:none}
   .nova-galeria .rotulo{display:none}
   .search-field.glass{flex:1 1 auto;max-width:none}
+}
+
+/* ================= LUNA NOTES ================= */
+/* Terceira folha do caderno. A pauta quadriculada é de propósito quase
+   invisível: serve de guia, não de desenho. */
+.luna-inner{display:flex;flex-direction:column}
+.luna-inner .page-title,
+.luna-inner .script-sub,
+.luna-inner .luna-barra,
+.luna-inner .page-foot{flex:none}
+
+.luna-barra{
+  display:flex;align-items:center;gap:4px;
+  margin:22px auto 14px;width:fit-content;max-width:100%;flex-wrap:wrap;
+  background:var(--branco);border:2px solid var(--azul);border-radius:999px;
+  padding:5px 9px;box-shadow:3px 3px 0 rgba(19,42,76,.16);
+}
+.luna-barra button{
+  flex:none;width:30px;height:30px;padding:0;border:none;border-radius:50%;
+  background:transparent;color:var(--azul);cursor:pointer;
+  display:inline-flex;align-items:center;justify-content:center;
+  font-family:'Nunito',sans-serif;font-size:14px;line-height:1;
+  transition:background-color .16s,color .16s;
+}
+.luna-barra button:hover{background:rgba(19,42,76,.12)}
+.luna-barra button.is-on{background:var(--azul);color:var(--branco)}
+.luna-barra button:focus-visible{outline:2px solid var(--azul);outline-offset:2px}
+.luna-barra button svg{
+  width:16px;height:16px;fill:none;stroke:currentColor;
+  stroke-width:2;stroke-linecap:round;stroke-linejoin:round;
+}
+.luna-barra .risco{width:1px;height:18px;background:rgba(19,42,76,.25);margin:0 4px}
+.luna-status{
+  margin:0 4px 0 8px;min-width:64px;
+  font-size:9px;letter-spacing:.16em;text-transform:uppercase;
+  font-weight:700;opacity:.5;
+}
+
+.luna-folha{
+  flex:1;min-height:0;overflow:hidden;
+  background-color:var(--papel);
+  background-image:
+    linear-gradient(rgba(19,42,76,.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(19,42,76,.055) 1px, transparent 1px);
+  background-size:22px 22px;
+  background-position:14px 14px;
+  border:2.5px solid var(--azul);
+  border-radius:18px 15px 20px 16px;   /* cantos levemente tortos */
+  box-shadow:var(--relevo);
+}
+.luna-texto{
+  height:100%;overflow-y:auto;outline:none;
+  padding:18px 22px;
+  font-family:'Patrick Hand',cursive;font-size:19px;line-height:22px;
+  color:var(--azul);overflow-wrap:anywhere;
+}
+.luna-texto:empty::before{content:attr(data-vazio);opacity:.34;pointer-events:none}
+.luna-texto ul{margin:0 0 0 6px;padding-left:20px}
+.luna-texto li{margin:0}
+.luna-texto::-webkit-scrollbar{width:9px}
+.luna-texto::-webkit-scrollbar-thumb{background:var(--bege-2);border-radius:9px}
+.luna-texto::-webkit-scrollbar-track{background:transparent}
+
+@media (max-width:600px){
+  .luna-barra{margin:16px auto 12px;gap:2px;padding:4px 7px}
+  .luna-barra button{width:28px;height:28px}
+  .luna-status{display:none}
+  .luna-texto{padding:14px 15px;font-size:18px;line-height:21px}
 }

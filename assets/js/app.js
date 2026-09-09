@@ -117,9 +117,14 @@
     if (aba === 'galeria' && newCard && newCard.classList.contains('is-open')) {
       limparFormulario();
     }
-    var inicio = $('#sheet-inicio');
-    if (aba === 'galeria') inicio.classList.add('is-flipped');
-    else inicio.classList.remove('is-flipped');
+    /* as folhas ficam empilhadas nesta ordem; para chegar à terceira,
+       as duas de cima viram */
+    var ordem = ['inicio', 'galeria', 'luna'];
+    var destino = ordem.indexOf(aba);
+    ordem.forEach(function (nome, i) {
+      var folha = $('#sheet-' + nome);
+      if (folha) folha.classList.toggle('is-flipped', i < destino);
+    });
     estado.abaAtual = aba;
     $('#pages').dataset.aba = aba;
 

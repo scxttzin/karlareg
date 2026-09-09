@@ -50,7 +50,7 @@
                'jul', 'ago', 'set', 'out', 'nov', 'dez'];
   function marcarData(quando) {
     var d = new Date(quando);
-    campoData.textContent = d.getDate() + ' de ' + MESES[d.getMonth()] + '.';
+    campoData.textContent = 'última anotação em ' + d.getDate() + ' de ' + MESES[d.getMonth()] + '.';
   }
 
   var guardado = ler();
