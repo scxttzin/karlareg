@@ -24,6 +24,7 @@
   --tag-vinho:#7B2E3A;
   --tag-azul:#A8C6E0;
   --tag-cinza:#D5D1C8;
+  --vermelho:#C0392B;
 
   --traco:2.5px solid var(--azul);
   --relevo:5px 6px 0 rgba(19,42,76,.20);
@@ -396,6 +397,7 @@ body{
 .gallery .social svg{width:15px;height:15px}
 .gallery .social button{font-size:10.5px;gap:3px}
 .gallery .card-tools{gap:4px}
+.gallery .card-tools button{width:22px;height:22px}
 .gallery .card-tools svg{width:14px;height:14px}
 .gallery .sticker::before{width:58px;height:17px;top:-10px}
 
@@ -449,8 +451,20 @@ body{
 @keyframes beat{0%{transform:scale(1)}40%{transform:scale(1.4)}100%{transform:scale(1)}}
 .social .spacer{flex:1}
 .card-tools{display:flex;gap:6px;flex:none}
-.card-tools button{background:none;border:none;cursor:pointer;color:var(--azul);opacity:.45;padding:2px}
+/* botao redondo: em repouso a bolinha e invisivel e so o traco aparece;
+   ao passar o mouse ela se acende — cinza no lapis, vermelha na lixeira */
+.card-tools button{
+  background:transparent;border:none;cursor:pointer;color:var(--azul);opacity:.45;
+  width:28px;height:28px;padding:0;border-radius:50%;
+  display:inline-flex;align-items:center;justify-content:center;
+  transition:background-color .18s,color .18s,opacity .18s,transform .18s;
+}
 .card-tools button:hover{opacity:1}
+.card-tools button:focus-visible{opacity:1;outline:2px solid var(--azul);outline-offset:2px}
+.card-tools [data-acao="editar"]:hover,
+.card-tools [data-m="editar"]:hover{background:var(--tag-cinza);color:var(--azul);transform:scale(1.06)}
+.card-tools [data-acao="excluir"]:hover,
+.card-tools [data-m="excluir"]:hover{background:var(--vermelho);color:var(--branco);transform:scale(1.06)}
 .card-tools svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 
 .empty-note{position:relative;z-index:2;font-family:'Patrick Hand',cursive;font-size:18px;opacity:.45}
@@ -879,6 +893,7 @@ body{
   .recentes .social svg{width:15px;height:15px}
   .recentes .social button{font-size:10.5px;gap:3px}
   .recentes .card-tools{gap:4px}
+  .recentes .card-tools button{width:22px;height:22px}
   .recentes .card-tools svg{width:14px;height:14px}
   .recentes .sticker::before{width:52px;height:15px;top:-9px}
   .recentes-dica{margin-top:12px;font-size:12.5px}
