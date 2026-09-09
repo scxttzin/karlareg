@@ -882,6 +882,14 @@ body{
   .gallery{grid-template-columns:repeat(auto-fill,minmax(142px,1fr));gap:26px 14px}
   .gallery .sticker{padding:8px 8px 10px}
   .gallery .sticker-name{font-size:19px}
+  /* a figurinha da galeria tem ~150px: a fileira de icones nao cabia e a
+     lixeira saia pela borda. Aqui tudo encolhe um pouco e nada e cortado. */
+  .gallery .social{gap:2px;padding-top:7px}
+  .gallery .social svg{width:14px;height:14px}
+  .gallery .social button{font-size:10px;gap:2px;padding:1px}
+  .gallery .card-tools{gap:0}
+  .gallery .card-tools button{width:20px;height:20px}
+  .gallery .card-tools svg{width:13px;height:13px}
   .glass-bar{padding:2px 0 14px}
   .search-field{padding:9px 16px}
 
