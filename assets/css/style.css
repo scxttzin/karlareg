@@ -1445,7 +1445,7 @@ body{
 .luna-texto b,
 .luna-texto strong{
   font-weight:700;
-  -webkit-text-stroke:.32px currentColor;
+  -webkit-text-stroke:.18px currentColor;
 }
 @media (max-width:600px){
   .luna-texto b,
