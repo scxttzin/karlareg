@@ -1304,7 +1304,7 @@ body{
 .luna-texto::-webkit-scrollbar-track{background:transparent}
 
 @media (max-width:600px){
-  .luna-barra{margin:14px auto 60px;gap:2px;padding:4px 7px}
+  .luna-barra{margin:14px auto 12px;gap:2px;padding:4px 7px}
   .luna-barra button{width:28px;height:28px}
   .luna-status{display:none}
   .luna-texto{padding:14px 15px;font-size:18px;line-height:21px}
@@ -1370,7 +1370,10 @@ body{
 }
 @media (max-width:600px){
   .page-title.com-gatinhos .gatinhos{height:21px}
-  .luna-gato{width:104px;right:10px;margin-bottom:-9px}
+/* no celular a Luna dorme no pe do card; a faixa que ela ocupa fica fora
+     da area de escrita, entao o texto para antes de chegar nela */
+  .luna-folha{padding-bottom:62px}
+  .luna-gato{width:106px;right:10px;top:auto;bottom:0;margin-bottom:-13px}
   .luna-cores{gap:3px}
   .luna-cores .cor-marca{width:15px;height:15px}
 }
