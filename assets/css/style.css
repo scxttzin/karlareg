@@ -1380,26 +1380,23 @@ body{
 
 /* ----- patinha sobre a aba Notas -----
    Ela marca a aba enquanto a folha esta fechada; ao abrir, sai de cena.
-   O adesivo tem mask-image, entao a pata tem que ficar depois da faixa de
-   cola, senao ela some junto com a borda translucida. */
+   Desenhada no mesmo traco dos outros icones, entao segue a cor da etiqueta:
+   escura na fechada, branca na aberta, sem precisar de filtro. */
 .tab .pata{
-  position:absolute;left:50%;bottom:11px;transform:translateX(-50%) rotate(-9deg);
-  width:27px;height:auto;pointer-events:none;
-  opacity:.62;
+  position:absolute;left:50%;bottom:9px;transform:translateX(-50%) rotate(-8deg);
+  width:27px;height:27px;pointer-events:none;
+  fill:none;stroke:currentColor;stroke-width:1.5;
+  stroke-linecap:round;stroke-linejoin:round;
+  opacity:.6;
   transition:opacity .3s ease,transform .3s ease;
 }
-.tab:hover .pata{opacity:.85;transform:translateX(-50%) rotate(-9deg) scale(1.08)}
-.tab.is-active .pata{opacity:0;transform:translateX(-50%) rotate(-9deg) scale(.8)}
-
-@media (max-width:600px){
-  /* na fileira horizontal a etiqueta e baixa: a pata fica ao lado do nome */
-  .tab .pata{
-    left:auto;right:9px;bottom:auto;top:50%;
-    width:17px;transform:translateY(-50%) rotate(-9deg);
-  }
-  .tab:hover .pata{transform:translateY(-50%) rotate(-9deg) scale(1.08)}
-  .tab.is-active .pata{transform:translateY(-50%) rotate(-9deg) scale(.8)}
+.tab:hover .pata{opacity:.85;transform:translateX(-50%) rotate(-8deg) scale(1.07)}
+.tab.is-active .pata{opacity:0;transform:translateX(-50%) rotate(-8deg) scale(.8)}
+/* o nome sobe um pouco para nao esbarrar na patinha */
+@media (min-width:601px){
+  .tab[data-goto="luna"] span{transform:translateY(-16px)}
 }
+
 
 /* ----- ícones das abas: só entram em cena no celular ----- */
 .ico-aba{display:none}
@@ -1427,13 +1424,30 @@ body{
   .tab[data-goto="luna"] .ico-aba{display:none}
   .tab .pata{
     position:static;left:auto;right:auto;top:auto;bottom:auto;
-    width:21px;opacity:.72;transform:rotate(-8deg);
+    width:22px;height:22px;opacity:.72;transform:rotate(-8deg);
+    stroke-width:1.7;
   }
   .tab:hover .pata{opacity:.9;transform:rotate(-8deg) scale(1.06)}
-  /* na etiqueta aberta o fundo e azul escuro: a pata inverte para branco,
-     como as outras carinhas de icone fazem com currentColor */
-  .tab.is-active .pata{
-    width:23px;opacity:1;transform:rotate(-8deg);
-    filter:brightness(0) invert(1);
+  .tab.is-active .pata{width:24px;height:24px;opacity:1;transform:rotate(-8deg)}
+}
+
+/* ----- celular: ao descer a página, as abas se recolhem -----
+   A faixa translúcida do adesivo só faz sentido parada sobre o papel; com o
+   conteúdo correndo por baixo ela vira sujeira. Então some, e a etiqueta
+   aberta encolhe até ficar do tamanho das outras. */
+@media (max-width:600px){
+  .notebook.rolando .tab{
+    -webkit-mask-image:none;mask-image:none;
+    box-shadow:0 3px 8px rgba(6,20,40,.22), inset 0 1px 0 rgba(255,255,255,.6);
   }
+  .notebook.rolando .tab::after{opacity:0}
+  .notebook.rolando .tab.is-active{
+    width:58px;height:38px;
+    box-shadow:0 3px 8px rgba(6,20,40,.3), inset 0 1px 0 rgba(255,255,255,.18);
+  }
+  .notebook.rolando .tab.is-active .ico-aba{width:20px;height:20px}
+  .notebook.rolando .tab.is-active .pata{width:22px;height:22px}
+  .tab,.tab .ico-aba,.tab .pata{transition:transform .3s ease,opacity .3s ease,
+    width .28s ease,height .28s ease,box-shadow .28s ease,background .32s ease,color .32s ease}
+  .tab::after{transition:opacity .28s ease}
 }

@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Patrick+Hand&family=Gochi+Hand&family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/style.css?v=47">
+<link rel="stylesheet" href="assets/css/style.css?v=49">
 </head>
 <body>
 
@@ -45,14 +45,16 @@
           <span>Galeria</span>
         </button>
         <button class="tab" role="tab" data-goto="luna" title="Luna Notes" aria-label="Luna Notes">
-          <svg class="ico-aba" viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M6 3.4h9.2L19.4 7.6V20.6H6z"/>
-            <path d="M15.2 3.6v4.2h4.2"/>
-            <path d="M9 12.4h7"/>
-            <path d="M9 16.2h4.6"/>
-          </svg>
           <span>Notas</span>
-          <img class="pata" src="assets/fotos/luna-pata.png?v=47" alt="" aria-hidden="true">
+          <!-- a patinha desenhada no mesmo traço dos outros ícones, para
+               acompanhar a cor da etiqueta em vez de ser uma imagem fixa -->
+          <svg class="pata" viewBox="0 0 24 24" aria-hidden="true">
+            <ellipse cx="9.1" cy="5.6" rx="2.05" ry="2.85"/>
+            <ellipse cx="15.1" cy="5.6" rx="2.05" ry="2.85"/>
+            <ellipse cx="4.3" cy="10.4" rx="1.85" ry="2.5" transform="rotate(-16 4.3 10.4)"/>
+            <ellipse cx="19.7" cy="10.4" rx="1.85" ry="2.5" transform="rotate(16 19.7 10.4)"/>
+            <path d="M12 10.6c2.1 0 3.4 1.9 4.6 3.4 1.2 1.5 1.9 2.5 1.9 3.8 0 1.9-1.6 3.2-3.4 3.2-1.4 0-2.2-.6-3.1-.6s-1.7.6-3.1.6c-1.8 0-3.4-1.3-3.4-3.2 0-1.3.7-2.3 1.9-3.8 1.2-1.5 2.5-3.4 4.6-3.4z"/>
+          </svg>
         </button>
       </nav>
 
@@ -176,9 +178,9 @@
 
 
             <div class="page-title com-gatinhos">
-              <img class="gatinhos" src="assets/fotos/luna-carinhas-a.png?v=47" alt="" aria-hidden="true">
+              <img class="gatinhos" src="assets/fotos/luna-carinhas-a.png?v=49" alt="" aria-hidden="true">
               <span>Luna Notes</span>
-              <img class="gatinhos" src="assets/fotos/luna-carinhas-b.png?v=47" alt="" aria-hidden="true">
+              <img class="gatinhos" src="assets/fotos/luna-carinhas-b.png?v=49" alt="" aria-hidden="true">
             </div>
             <p class="script-sub" id="lunaData"></p>
 
@@ -216,7 +218,7 @@
             <div class="luna-area">
 
               <!-- a Luna dorme deitada sobre a borda de cima do card -->
-              <img class="luna-gato" src="assets/fotos/luna-gato.png?v=47" alt="" aria-hidden="true">
+              <img class="luna-gato" src="assets/fotos/luna-gato.png?v=49" alt="" aria-hidden="true">
 
               <div class="luna-folha">
               <div class="luna-texto" id="lunaTexto" contenteditable="true" role="textbox"
@@ -264,10 +266,10 @@
 <div class="toast" id="toast" hidden></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="assets/js/config.js?v=47"></script>
-<script src="assets/js/store.js?v=47"></script>
-<script src="assets/js/store-supabase.js?v=47"></script>
-<script src="assets/js/app.js?v=47"></script>
-<script src="assets/js/luna.js?v=47"></script>
+<script src="assets/js/config.js?v=49"></script>
+<script src="assets/js/store.js?v=49"></script>
+<script src="assets/js/store-supabase.js?v=49"></script>
+<script src="assets/js/app.js?v=49"></script>
+<script src="assets/js/luna.js?v=49"></script>
 </body>
 </html>

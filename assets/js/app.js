@@ -127,6 +127,9 @@
     });
     estado.abaAtual = aba;
     $('#pages').dataset.aba = aba;
+    /* trocando de folha, as abas voltam ao estado de repouso */
+    var folhaNova = $('#sheet-' + aba + ' .sheet-inner');
+    $('.notebook').classList.toggle('rolando', !!folhaNova && folhaNova.scrollTop > 6);
 
     /* só a aba aberta fica na frente: a outra vai para trás na hora */
     $$('.tab').forEach(function (b) { b.classList.toggle('is-active', b.dataset.goto === aba); });
@@ -134,6 +137,18 @@
   $$('.tab').forEach(function (b) {
     b.addEventListener('click', function () { irPara(b.dataset.goto); });
   });
+
+  /* no celular, descer a página recolhe as abas: a faixa translúcida do
+     adesivo só fica bem com o papel parado embaixo dela */
+  (function () {
+    var caderno = $('.notebook');
+    function conferir(folha) {
+      caderno.classList.toggle('rolando', folha.scrollTop > 6);
+    }
+    $$('.sheet-inner').forEach(function (folha) {
+      folha.addEventListener('scroll', function () { conferir(folha); }, { passive: true });
+    });
+  })();
 
   /* a barra da Galeria aparece enquanto há movimento — rolagem ou mouse
      andando — e some sozinha quando o cursor fica parado */
