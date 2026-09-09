@@ -197,3 +197,24 @@ fechar, o ícone de pino fixa ou solta. Regras:
 Precisa da coluna no banco: rode [banco/fixar.sql](banco/fixar.sql) uma vez.
 Antes disso o botão aparece mas não grava — o índice parcial `so_uma_fixada`
 garante no próprio banco que nunca haja duas fixadas.
+
+## Luna Notes
+
+Bloco de notas à direita do caderno, só no computador. Aparece a partir de
+1200px de largura; abaixo disso ele some e o caderno volta a ocupar a mesa
+inteira, para não espremer nada em notebook pequeno.
+
+- A gata fica atrás do bloco: só as orelhas (acima) e o rabo (à direita)
+  aparecem. As duas são SVG, sem imagem externa.
+- Formatação no espírito do Notes: negrito, itálico, riscado, marca-texto e
+  tópicos, mais um botão de limpar formatação. Atalhos: `Ctrl+B`, `Ctrl+I`,
+  `Ctrl+Shift+X` (riscar) e `Ctrl+Shift+H` (destacar).
+- O texto é gravado sozinho meio segundo depois da última tecla, em
+  `localStorage['karlareg.luna']`. **Fica no navegador**: não acompanha a
+  usuária entre computadores. Para isso seria preciso uma tabela `notas` no
+  Supabase.
+- Colar entra como texto puro, para não trazer formatação de fora.
+
+O Início e a Galeria encolhem sozinhos quando o bloco está aberto: a folha é
+um *container* CSS (`@container folha`), então quem decide o layout é a largura
+do papel, não a da janela.

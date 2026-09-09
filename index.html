@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Patrick+Hand&family=Gochi+Hand&family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/style.css?v=27">
+<link rel="stylesheet" href="assets/css/style.css?v=28">
 </head>
 <body>
 
@@ -147,6 +147,77 @@
       </div>
     </div>
   </div>
+
+  <!-- ---------------- LUNA NOTES (só no computador) ---------------- -->
+  <aside class="luna" id="luna" aria-label="Luna Notes">
+
+    <!-- a gata fica atrás do bloco: só as orelhas e o rabo aparecem -->
+    <svg class="luna-orelhas" viewBox="0 0 240 96" aria-hidden="true">
+      <g class="pelo">
+        <path d="M14 94 C16 52 30 14 46 12 C62 10 78 48 82 94 Z"/>
+        <path d="M158 94 C162 48 178 10 194 12 C210 14 224 52 226 94 Z"/>
+      </g>
+      <g class="pelo-cinza">
+        <path d="M34 92 C36 58 44 32 52 32 C60 32 68 58 70 92 Z"/>
+        <path d="M170 92 C172 58 180 32 188 32 C196 32 204 58 206 92 Z"/>
+      </g>
+      <g class="tufo">
+        <path d="M12 94 L18 82 L24 94 L30 82 L36 94"/>
+        <path d="M204 94 L210 82 L216 94 L222 82 L228 94"/>
+      </g>
+      <path class="cabeca" d="M6 96 C22 62 92 44 120 44 C148 44 218 62 234 96 Z"/>
+    </svg>
+
+    <svg class="luna-rabo" viewBox="0 0 130 190" aria-hidden="true">
+      <defs>
+        <clipPath id="lunaRaboCorte">
+          <path d="M62 188 C30 158 22 104 44 62 C58 34 88 18 106 30 C122 40 124 64 110 76 C98 86 82 82 80 70 C66 76 56 92 52 112 C46 142 52 168 76 188 Z"/>
+        </clipPath>
+      </defs>
+      <g clip-path="url(#lunaRaboCorte)">
+        <rect class="pelo-fundo" x="0" y="0" width="130" height="190"/>
+        <g class="pelo-cinza">
+          <rect x="-20" y="150" width="180" height="20" transform="rotate(-8 65 160)"/>
+          <rect x="-20" y="112" width="180" height="20" transform="rotate(-14 65 122)"/>
+          <rect x="-20" y="74" width="180" height="18" transform="rotate(-26 65 83)"/>
+          <rect x="-20" y="34" width="180" height="16" transform="rotate(-44 65 42)"/>
+        </g>
+      </g>
+      <path class="contorno" d="M62 188 C30 158 22 104 44 62 C58 34 88 18 106 30 C122 40 124 64 110 76 C98 86 82 82 80 70 C66 76 56 92 52 112 C46 142 52 168 76 188"/>
+    </svg>
+
+    <div class="luna-bloco">
+      <div class="luna-topo">
+        <p class="luna-nome">Luna Notes</p>
+        <p class="luna-data" id="lunaData"></p>
+      </div>
+
+      <div class="luna-barra" id="lunaBarra" role="toolbar" aria-label="formatação">
+        <button type="button" data-cmd="bold" title="negrito"><b>B</b></button>
+        <button type="button" data-cmd="italic" title="itálico"><i>I</i></button>
+        <button type="button" data-cmd="strikeThrough" title="riscar"><s>S</s></button>
+        <span class="risco"></span>
+        <button type="button" data-cmd="marca" title="destacar">
+          <svg viewBox="0 0 24 24"><path d="M14.5 3.5 20.5 9.5 11 19H5v-6z"/><path d="M4 21.5h16"/></svg>
+        </button>
+        <button type="button" data-cmd="insertUnorderedList" title="tópicos">
+          <svg viewBox="0 0 24 24"><circle cx="5" cy="7" r="1.6"/><circle cx="5" cy="12.5" r="1.6"/><circle cx="5" cy="18" r="1.6"/><path d="M10 7h10"/><path d="M10 12.5h10"/><path d="M10 18h10"/></svg>
+        </button>
+        <span class="risco"></span>
+        <button type="button" data-cmd="removeFormat" title="limpar formatação">
+          <svg viewBox="0 0 24 24"><path d="M7 5.5h12"/><path d="M13.5 5.5 10 18.5"/><path d="M4 15.5 9.5 21"/><path d="M9.5 15.5 4 21"/></svg>
+        </button>
+      </div>
+
+      <div class="luna-folha">
+        <div class="luna-texto" id="lunaTexto" contenteditable="true" role="textbox"
+             aria-multiline="true" aria-label="bloco de notas"
+             data-vazio="escreva aqui — encomendas, ideias, receitas de esmalte"></div>
+      </div>
+
+      <p class="luna-status" id="lunaStatus"></p>
+    </div>
+  </aside>
 </div>
 
 <!-- ---------------- MODAL DO CARD ---------------- -->
@@ -178,9 +249,10 @@
 <div class="toast" id="toast" hidden></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="assets/js/config.js?v=27"></script>
-<script src="assets/js/store.js?v=27"></script>
-<script src="assets/js/store-supabase.js?v=27"></script>
-<script src="assets/js/app.js?v=27"></script>
+<script src="assets/js/config.js?v=28"></script>
+<script src="assets/js/store.js?v=28"></script>
+<script src="assets/js/store-supabase.js?v=28"></script>
+<script src="assets/js/app.js?v=28"></script>
+<script src="assets/js/luna.js?v=28"></script>
 </body>
 </html>
