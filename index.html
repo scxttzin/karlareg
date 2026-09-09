@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Patrick+Hand&family=Gochi+Hand&family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/style.css?v=31">
+<link rel="stylesheet" href="assets/css/style.css?v=35">
 </head>
 <body>
 
@@ -149,7 +149,34 @@
         <section class="sheet" id="sheet-luna" data-sheet="luna">
           <div class="sheet-inner luna-inner">
 
-            <div class="page-title"><span>Luna Notes</span></div>
+            <!-- carinha de gato usada quatro vezes ao lado do título -->
+            <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+              <symbol id="carinhaGato" viewBox="0 0 44 38">
+                <clipPath id="carinhaCorte">
+                  <path d="M7 14 L4 3 L15 8.5 C18 7.5 26 7.5 29 8.5 L40 3 L37 14 C40 19 40 26 36 30 C32 34 12 34 8 30 C4 26 4 19 7 14 Z"/>
+                </clipPath>
+                <path fill="#FFFDF8" d="M7 14 L4 3 L15 8.5 C18 7.5 26 7.5 29 8.5 L40 3 L37 14 C40 19 40 26 36 30 C32 34 12 34 8 30 C4 26 4 19 7 14 Z"/>
+                <g clip-path="url(#carinhaCorte)">
+                  <path fill="#CBD0D4" d="M29 8.5 L40 3 L37 14 C40 19 40 26 36 30 C33 33 27 34 24 32 C31 25 32 16 29 8.5 Z"/>
+                </g>
+                <path fill="none" stroke="#132A4C" stroke-width="2.6" stroke-linejoin="round" d="M7 14 L4 3 L15 8.5 C18 7.5 26 7.5 29 8.5 L40 3 L37 14 C40 19 40 26 36 30 C32 34 12 34 8 30 C4 26 4 19 7 14 Z"/>
+                <ellipse fill="#132A4C" cx="15.5" cy="20.5" rx="2.1" ry="2.7"/>
+                <ellipse fill="#132A4C" cx="28.5" cy="20.5" rx="2.1" ry="2.7"/>
+                <path fill="none" stroke="#132A4C" stroke-width="2" stroke-linecap="round" d="M18.5 25 Q22 28.5 25.5 25"/>
+              </symbol>
+            </svg>
+
+            <div class="page-title com-gatinhos">
+              <span class="gatinhos" aria-hidden="true">
+                <svg class="gatinho"><use href="#carinhaGato"/></svg>
+                <svg class="gatinho espelhado"><use href="#carinhaGato"/></svg>
+              </span>
+              <span>Luna Notes</span>
+              <span class="gatinhos" aria-hidden="true">
+                <svg class="gatinho"><use href="#carinhaGato"/></svg>
+                <svg class="gatinho espelhado"><use href="#carinhaGato"/></svg>
+              </span>
+            </div>
             <p class="script-sub" id="lunaData"></p>
 
             <div class="luna-barra" id="lunaBarra" role="toolbar" aria-label="formatação">
@@ -170,10 +197,56 @@
               <span class="luna-status" id="lunaStatus"></span>
             </div>
 
-            <div class="luna-folha">
+            <div class="luna-area">
+
+              <!-- a Luna dorme deitada sobre a borda de cima do card -->
+              <svg class="luna-gato" viewBox="0 0 400 250" aria-hidden="true">
+                <defs>
+                  <clipPath id="lunaCorpo">
+                    <path d="M14 152 C6 110 22 70 46 56 L50 24 Q56 12 63 24 L96 50 C110 44 124 40 140 40 L152 20 Q160 10 167 22 L178 54 C244 58 322 96 354 148 C374 182 356 212 320 212 L66 212 C30 212 18 186 14 152 Z"/>
+                  </clipPath>
+                </defs>
+
+                <!-- corpo: cabeça à esquerda, lombo subindo até a garupa -->
+                <path class="corpo" d="M14 152 C6 110 22 70 46 56 L50 24 Q56 12 63 24 L96 50 C110 44 124 40 140 40 L152 20 Q160 10 167 22 L178 54 C244 58 322 96 354 148 C374 182 356 212 320 212 L66 212 C30 212 18 186 14 152 Z"/>
+
+                <g class="manchas" clip-path="url(#lunaCorpo)">
+                  <!-- orelha e face esquerdas -->
+                  <path d="M46 56 L50 24 Q56 12 63 24 L96 50 C78 60 64 86 60 120 C30 110 28 72 46 56 Z"/>
+                  <!-- orelha direita descendo para o ombro -->
+                  <path d="M140 40 L152 20 Q160 10 167 22 L178 54 C206 60 232 72 252 90 C228 114 190 114 168 94 C148 76 138 58 140 40 Z"/>
+                  <!-- lombo e garupa -->
+                  <path d="M214 60 C284 74 344 110 360 156 C374 194 350 216 318 216 L206 216 C270 200 314 162 314 130 C314 100 274 76 214 60 Z"/>
+                </g>
+
+                <path class="contorno-corpo" d="M14 152 C6 110 22 70 46 56 L50 24 Q56 12 63 24 L96 50 C110 44 124 40 140 40 L152 20 Q160 10 167 22 L178 54 C244 58 322 96 354 148 C374 182 356 212 320 212 L66 212 C30 212 18 186 14 152 Z"/>
+
+                <!-- rabo passando na frente, ao longo da barriga -->
+                <path class="rabo-fora" d="M358 174 C372 210 332 232 252 227 C212 224 174 216 148 206"/>
+                <path class="rabo-dentro" d="M358 174 C372 210 332 232 252 227 C212 224 174 216 148 206"/>
+
+                <!-- carinha dormindo e patinhas dobradas -->
+                <g class="tracos">
+                  <path d="M42 141 C52 130 64 130 74 141"/>
+                  <path d="M106 137 C116 126 128 126 138 137"/>
+                  <path d="M48 174 C96 198 172 200 218 174"/>
+                  <path d="M38 198 C56 186 80 190 92 208"/>
+                </g>
+                <circle class="focinho" cx="89" cy="147" r="7"/>
+
+                <!-- coraçõezinhos -->
+                <g class="coracoes">
+                  <path transform="translate(196 0) scale(1.7)" d="M7 12 C2 8 0 5.6 0 3.6 A3.6 3.6 0 0 1 7 2.4 A3.6 3.6 0 0 1 14 3.6 C14 5.6 12 8 7 12 Z"/>
+                  <path transform="translate(370 104) scale(1.2)" d="M7 12 C2 8 0 5.6 0 3.6 A3.6 3.6 0 0 1 7 2.4 A3.6 3.6 0 0 1 14 3.6 C14 5.6 12 8 7 12 Z"/>
+                  <path transform="translate(26 216) scale(1)" d="M7 12 C2 8 0 5.6 0 3.6 A3.6 3.6 0 0 1 7 2.4 A3.6 3.6 0 0 1 14 3.6 C14 5.6 12 8 7 12 Z"/>
+                </g>
+              </svg>
+
+              <div class="luna-folha">
               <div class="luna-texto" id="lunaTexto" contenteditable="true" role="textbox"
                    aria-multiline="true" aria-label="bloco de notas"
                    data-vazio="escreva aqui — encomendas, ideias, receitas de esmalte"></div>
+              </div>
             </div>
 
             <p class="page-foot">o que estiver escrito fica guardado sozinho</p>
@@ -215,10 +288,10 @@
 <div class="toast" id="toast" hidden></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="assets/js/config.js?v=31"></script>
-<script src="assets/js/store.js?v=31"></script>
-<script src="assets/js/store-supabase.js?v=31"></script>
-<script src="assets/js/app.js?v=31"></script>
-<script src="assets/js/luna.js?v=31"></script>
+<script src="assets/js/config.js?v=35"></script>
+<script src="assets/js/store.js?v=35"></script>
+<script src="assets/js/store-supabase.js?v=35"></script>
+<script src="assets/js/app.js?v=35"></script>
+<script src="assets/js/luna.js?v=35"></script>
 </body>
 </html>

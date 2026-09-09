@@ -1253,7 +1253,7 @@ body{
 
 .luna-barra{
   display:flex;align-items:center;gap:4px;
-  margin:22px auto 14px;width:fit-content;max-width:100%;flex-wrap:wrap;
+  margin:20px auto 62px;width:fit-content;max-width:100%;flex-wrap:wrap;
   background:var(--branco);border:2px solid var(--azul);border-radius:999px;
   padding:5px 9px;box-shadow:3px 3px 0 rgba(19,42,76,.16);
 }
@@ -1279,7 +1279,7 @@ body{
 }
 
 .luna-folha{
-  flex:1;min-height:0;overflow:hidden;
+  min-height:0;overflow:hidden;
   background-color:var(--papel);
   background-image:
     linear-gradient(rgba(19,42,76,.055) 1px, transparent 1px),
@@ -1296,7 +1296,7 @@ body{
   font-family:'Patrick Hand',cursive;font-size:19px;line-height:22px;
   color:var(--azul);overflow-wrap:anywhere;
 }
-.luna-texto:empty::before{content:attr(data-vazio);opacity:.34;pointer-events:none}
+.luna-texto:empty::after{content:attr(data-vazio);opacity:.34;pointer-events:none}
 .luna-texto ul{margin:0 0 0 6px;padding-left:20px}
 .luna-texto li{margin:0}
 .luna-texto::-webkit-scrollbar{width:9px}
@@ -1304,8 +1304,42 @@ body{
 .luna-texto::-webkit-scrollbar-track{background:transparent}
 
 @media (max-width:600px){
-  .luna-barra{margin:16px auto 12px;gap:2px;padding:4px 7px}
+  .luna-barra{margin:14px auto 46px;gap:2px;padding:4px 7px}
   .luna-barra button{width:28px;height:28px}
   .luna-status{display:none}
   .luna-texto{padding:14px 15px;font-size:18px;line-height:21px}
+}
+
+/* ----- a Luna dormindo sobre a borda de cima do card ----- */
+.luna-area{position:relative;flex:1;min-height:0;display:flex}
+.luna-area .luna-folha{flex:1;min-width:0}
+.luna-gato{
+  position:absolute;z-index:2;right:30px;bottom:100%;margin-bottom:-13px;
+  width:150px;height:auto;pointer-events:none;
+  filter:drop-shadow(0 5px 6px rgba(19,42,76,.16));
+}
+.luna-gato .corpo{fill:var(--papel)}
+.luna-gato .manchas path{fill:#CBD0D4}
+.luna-gato .contorno-corpo{fill:none;stroke:var(--azul);stroke-width:11;stroke-linejoin:round;stroke-linecap:round}
+.luna-gato .rabo-fora{fill:none;stroke:var(--azul);stroke-width:25;stroke-linecap:round}
+.luna-gato .rabo-dentro{fill:none;stroke:#CBD0D4;stroke-width:14;stroke-linecap:round}
+.luna-gato .tracos path{fill:none;stroke:var(--azul);stroke-width:9;stroke-linecap:round}
+.luna-gato .focinho{fill:var(--azul)}
+.luna-gato .coracoes path{fill:var(--azul)}
+
+@media (max-width:600px){
+  .luna-gato{width:112px;right:16px;margin-bottom:-10px}
+}
+
+/* ----- carinhas de gato ao lado do título das Notas ----- */
+.page-title.com-gatinhos{
+  display:flex;align-items:center;justify-content:center;gap:clamp(10px,2vw,22px);
+}
+.gatinhos{display:inline-flex;align-items:center;gap:5px;flex:none}
+.gatinho{width:29px;height:25px;flex:none;display:block}
+.gatinho.espelhado{transform:scaleX(-1)}
+@media (max-width:600px){
+  .page-title.com-gatinhos{gap:8px}
+  .gatinho{width:23px;height:20px}
+  .gatinhos{gap:3px}
 }
