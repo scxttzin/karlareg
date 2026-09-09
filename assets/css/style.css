@@ -1437,3 +1437,17 @@ body{
   .tab,.tab .ico-aba,.tab .pata{transition:transform .3s ease,opacity .3s ease,
     width .28s ease,height .28s ease,box-shadow .28s ease,background .32s ease,color .32s ease}
 }
+
+/* ----- negrito visível na nota -----
+   A Patrick Hand só tem um peso: o negrito do navegador é sintetizado e quase
+   não se distingue, ainda mais na tela do celular. O contorno fino engrossa o
+   traço de verdade, sem trocar a letra no meio da frase. */
+.luna-texto b,
+.luna-texto strong{
+  font-weight:700;
+  -webkit-text-stroke:.6px currentColor;
+}
+@media (max-width:600px){
+  .luna-texto b,
+  .luna-texto strong{-webkit-text-stroke:.62px currentColor;letter-spacing:.2px}
+}
