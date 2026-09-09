@@ -66,6 +66,30 @@
     toastTimer = setTimeout(function () { el.hidden = true; }, 2200);
   }
 
+  /* ---------- confirmação de exclusão ----------
+     substitui o confirm() do navegador por um card no centro da tela.
+     Vale para a figurinha fechada e para o card ampliado: o overlay tem
+     z-index maior que o do modal. */
+  var respostaConfirmacao = null;
+  function responderConfirmacao(valor) {
+    if (!respostaConfirmacao) return;
+    var responder = respostaConfirmacao;
+    respostaConfirmacao = null;
+    $('#confirmOverlay').hidden = true;
+    responder(valor);
+  }
+  function confirmarExclusao(nome) {
+    $('#confirmNome').textContent = nome || '';
+    $('#confirmOverlay').hidden = false;
+    $('#confirmNao').focus();
+    return new Promise(function (ok) { respostaConfirmacao = ok; });
+  }
+  $('#confirmSim').addEventListener('click', function () { responderConfirmacao(true); });
+  $('#confirmNao').addEventListener('click', function () { responderConfirmacao(false); });
+  $('#confirmOverlay').addEventListener('click', function (e) {
+    if (e.target === this) responderConfirmacao(false);
+  });
+
   var ICO = {
     coracao: '<svg viewBox="0 0 24 24"><path d="M12 20.5S3.5 15 3.5 9.2A4.7 4.7 0 0 1 12 6.6a4.7 4.7 0 0 1 8.5 2.6c0 5.8-8.5 11.3-8.5 11.3z"/></svg>',
     aviao: '<svg viewBox="0 0 24 24"><path d="M21 3 10.5 14.2"/><path d="M21 3 14.4 21l-3.9-6.8L3.6 10.4 21 3z"/></svg>',
@@ -520,7 +544,8 @@
           editarCard(id);
           break;
         case 'excluir':
-          if (confirm('Excluir esta criação do caderno?')) {
+          var nome = (card.querySelector('.sticker-name') || {}).textContent || '';
+          if (await confirmarExclusao(nome)) {
             await Store.excluir(id);
             toast('criação removida');
             render();
@@ -805,7 +830,7 @@
           editarCard(c.id);
           break;
         case 'excluir':
-          if (confirm('Excluir esta criação do caderno?')) {
+          if (await confirmarExclusao(c.nome)) {
             await Store.excluir(c.id);
             fecharModal();
             toast('criação removida');
@@ -849,7 +874,8 @@
   overlay.addEventListener('click', function (e) { if (e.target === overlay) fecharModal(); });
   document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape') {
-      if (!$('#shareOverlay').hidden) fecharShare();
+      if (!$('#confirmOverlay').hidden) responderConfirmacao(false);
+      else if (!$('#shareOverlay').hidden) fecharShare();
       else if (!overlay.hidden) fecharModal();
       else if (newCard.classList.contains('is-open')) limparFormulario();
       return;
