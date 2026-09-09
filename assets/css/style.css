@@ -1400,3 +1400,40 @@ body{
   .tab:hover .pata{transform:translateY(-50%) rotate(-9deg) scale(1.08)}
   .tab.is-active .pata{transform:translateY(-50%) rotate(-9deg) scale(.8)}
 }
+
+/* ----- ícones das abas: só entram em cena no celular ----- */
+.ico-aba{display:none}
+
+@media (max-width:600px){
+  /* etiquetas curtas, com o ícone no lugar do nome */
+  .tabs{gap:8px}
+  .tab{
+    min-width:0;width:58px;height:38px;
+    padding:0 0 8px;
+  }
+  .tab.is-active{min-width:0;width:66px;height:42px}
+  .tab span{
+    position:absolute;width:1px;height:1px;overflow:hidden;
+    clip-path:inset(50%);white-space:nowrap;   /* fica só para leitor de tela */
+  }
+  .ico-aba{
+    display:block;width:20px;height:20px;
+    fill:none;stroke:currentColor;stroke-width:1.9;
+    stroke-linecap:round;stroke-linejoin:round;
+  }
+  .tab.is-active .ico-aba{width:22px;height:22px}
+  /* nas Notas quem faz as vezes de icone e a propria patinha, entao aqui
+     ela fica no meio da etiqueta e continua visivel com a folha aberta */
+  .tab[data-goto="luna"] .ico-aba{display:none}
+  .tab .pata{
+    position:static;left:auto;right:auto;top:auto;bottom:auto;
+    width:21px;opacity:.72;transform:rotate(-8deg);
+  }
+  .tab:hover .pata{opacity:.9;transform:rotate(-8deg) scale(1.06)}
+  /* na etiqueta aberta o fundo e azul escuro: a pata inverte para branco,
+     como as outras carinhas de icone fazem com currentColor */
+  .tab.is-active .pata{
+    width:23px;opacity:1;transform:rotate(-8deg);
+    filter:brightness(0) invert(1);
+  }
+}
