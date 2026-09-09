@@ -242,6 +242,32 @@
     }
   };
 
+  /* ---------- bloco de notas ----------
+     Uma linha só, de id fixo. Se a tabela ainda não existir, devolve null e
+     o caderno segue guardando a nota no navegador, sem quebrar nada. */
+  var NOTA_ID = 'luna';
+
+  SupabaseAdapter.lerNota = async function () {
+    var r = await db.from('notas').select('html, atualizado_em')
+      .eq('id', NOTA_ID).maybeSingle();
+    if (r.error || !r.data) {
+      if (r.error) console.warn('notas: ' + r.error.message);
+      return null;
+    }
+    return {
+      html: r.data.html || '',
+      em: new Date(r.data.atualizado_em).getTime()
+    };
+  };
+
+  SupabaseAdapter.gravarNota = async function (html) {
+    var r = await db.from('notas').upsert({
+      id: NOTA_ID, html: html, atualizado_em: new Date().toISOString()
+    });
+    if (r.error) { console.warn('notas: ' + r.error.message); return false; }
+    return true;
+  };
+
   /* ---------- sessão da dona do caderno ---------- */
   SupabaseAdapter.auth = {
     atual: async function () {

@@ -37,27 +37,35 @@
                     parseInt(hex.slice(5, 7), 16) + ')';
   }
 
-  /* ---------- guardar e ler ---------- */
-  function ler() {
+  /* ---------- guardar e ler ----------
+     A nota vai para o banco, para acompanhar a Karla em qualquer aparelho.
+     O navegador continua guardando uma cópia: serve de reserva quando o
+     banco não responde e é o que aparece enquanto a leitura não volta. */
+  function lerLocal() {
     try { return JSON.parse(localStorage.getItem(CHAVE) || 'null'); }
     catch (e) { return null; }
+  }
+  function gravarLocal(html) {
+    try {
+      localStorage.setItem(CHAVE, JSON.stringify({ html: html, em: Date.now() }));
+    } catch (e) {}
   }
 
   var guardando;
   function guardar() {
     clearTimeout(guardando);
-    guardando = setTimeout(function () {
-      try {
-        localStorage.setItem(CHAVE, JSON.stringify({
-          html: texto.innerHTML,
-          em: Date.now()
-        }));
-        marcarData(Date.now());
+    guardando = setTimeout(async function () {
+      var html = texto.innerHTML;
+      gravarLocal(html);
+      marcarData(Date.now());
+
+      if (window.Store && typeof window.Store.gravarNota === 'function') {
+        var ok = await window.Store.gravarNota(html);
+        aviso(ok ? 'guardado' : 'guardado só neste aparelho');
+      } else {
         aviso('guardado');
-      } catch (e) {
-        aviso('não coube no navegador');
       }
-    }, 500);
+    }, 600);
   }
 
   var avisoTimer;
@@ -74,13 +82,27 @@
     campoData.textContent = 'última anotação em ' + d.getDate() + ' de ' + MESES[d.getMonth()] + '.';
   }
 
-  var guardado = ler();
+  /* primeiro o que está no navegador, para a folha não abrir vazia; depois,
+     quando o banco responder, vale a versão de lá */
+  var guardado = lerLocal();
   if (guardado && guardado.html) {
     texto.innerHTML = guardado.html;
     marcarData(guardado.em || Date.now());
   } else {
     marcarData(Date.now());
   }
+
+  (async function buscarDoBanco() {
+    if (!window.Store || typeof window.Store.lerNota !== 'function') return;
+    var doBanco = await window.Store.lerNota();
+    if (!doBanco) return;
+    /* não sobrescreve o que a pessoa já começou a digitar agora */
+    if (document.activeElement === texto) return;
+    if (doBanco.html === texto.innerHTML) return;
+    texto.innerHTML = doBanco.html;
+    gravarLocal(doBanco.html);
+    marcarData(doBanco.em || Date.now());
+  })();
 
   /* ---------- formatação ----------
      execCommand é antigo, mas é o único caminho que funciona em todos os

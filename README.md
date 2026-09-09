@@ -213,10 +213,12 @@ duas de cima viram.
 - A gata e as quatro carinhas do título são as imagens da cliente, recortadas
   com `ferramentas/tirar-fundo.ps1` — o fundo e apagado por alagamento a partir
   das bordas, senão a barriga branca da gata sumiria junto com o fundo branco.
-- O texto é gravado sozinho meio segundo depois da última tecla, em
-  `localStorage[karlareg.luna]`. **Fica no navegador**: não acompanha a
-  usuária entre computadores. Para isso seria preciso uma tabela `notas` no
-  Supabase.
+- O texto é gravado sozinho pouco depois da última tecla, na tabela `notas`
+  do Supabase — assim ele acompanha a Karla em qualquer aparelho. O navegador
+  guarda uma cópia em `localStorage[karlareg.luna]`, que serve de reserva e é
+  o que aparece enquanto a leitura do banco não volta. Sem a tabela, o rodapé
+  avisa "guardado só neste aparelho".
+- Precisa da tabela: rode [banco/notas.sql](banco/notas.sql) uma vez.
 - Colar entra como texto puro, para não trazer formatação de fora.
 - A pauta quadriculada é quase invisível de propósito: serve de guia, não de
   desenho.

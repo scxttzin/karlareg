@@ -136,6 +136,19 @@
     }
   };
 
+  /* ---------- bloco de notas ---------- */
+  LocalAdapter.lerNota = async function () {
+    try { return JSON.parse(localStorage.getItem("karlareg.luna") || "null"); }
+    catch (e) { return null; }
+  };
+  LocalAdapter.gravarNota = async function (html) {
+    try {
+      localStorage.setItem("karlareg.luna",
+        JSON.stringify({ html: html, em: Date.now() }));
+      return true;
+    } catch (e) { return false; }
+  };
+
   LocalAdapter.MAX_FOTOS = MAX_FOTOS;
   global.Store = LocalAdapter;
   /* fica acessível mesmo depois que o adaptador do Supabase assume,
