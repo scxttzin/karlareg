@@ -1372,9 +1372,8 @@ body{
 }
 
 /* ----- patinha sobre a aba Notas -----
-   Ela marca a aba enquanto a folha esta fechada; ao abrir, sai de cena.
-   Desenhada no mesmo traco dos outros icones, entao segue a cor da etiqueta:
-   escura na fechada, branca na aberta, sem precisar de filtro. */
+   Desenhada no mesmo traco dos outros icones, entao segue a cor da
+   etiqueta: escura na fechada e branca na aberta, sem precisar de filtro. */
 .tab .pata{
   position:absolute;left:50%;bottom:5px;transform:translateX(-50%) rotate(-8deg);
   width:37px;height:37px;pointer-events:none;
@@ -1384,7 +1383,7 @@ body{
   transition:opacity .3s ease,transform .3s ease;
 }
 .tab:hover .pata{opacity:.85;transform:translateX(-50%) rotate(-8deg) scale(1.07)}
-.tab.is-active .pata{opacity:0;transform:translateX(-50%) rotate(-8deg) scale(.8)}
+.tab.is-active .pata{opacity:.9;transform:translateX(-50%) rotate(-8deg)}
 /* o nome sobe um pouco para nao esbarrar na patinha */
 @media (min-width:601px){
   .tab[data-goto="luna"] span{transform:translateY(-19px)}
