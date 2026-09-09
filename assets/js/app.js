@@ -676,11 +676,14 @@
       '<div class="modal-grid">' +
         '<div>' +
           '<div id="areaFotos">' + htmlCarrossel(c) + '</div>' +
-          '<div class="social" style="margin-top:14px">' +
-            '<button data-m="curtir" class="' + (c.curtido ? 'liked' : '') + '">' + ICO.coracao + '<span>' + (c.likes || 0) + '</span></button>' +
-            '<button data-m="comentar">' + ICO.balao + '<span>' + c.comentarios.length + '</span></button>' +
-            '<button data-m="compartilhar">' + ICO.aviao + '</button>' +
-            '<span class="spacer"></span>' +
+          /* a barra existe para que no celular o par editar/excluir possa se
+             soltar da linha social e descer para junto dos comentários */
+          '<div class="modal-barra">' +
+            '<div class="social">' +
+              '<button data-m="curtir" class="' + (c.curtido ? 'liked' : '') + '">' + ICO.coracao + '<span>' + (c.likes || 0) + '</span></button>' +
+              '<button data-m="comentar">' + ICO.balao + '<span>' + c.comentarios.length + '</span></button>' +
+              '<button data-m="compartilhar">' + ICO.aviao + '</button>' +
+            '</div>' +
             /* no card ampliado os dois ganham nome ao lado do icone */
             '<span class="card-tools com-rotulo">' +
               '<button data-m="editar" title="editar">' + ICO.lapis +
@@ -697,6 +700,7 @@
           '<p class="block-title">tags</p>' +
           (c.tags.length ? htmlTags(c.tags) : '<p class="empty-note">sem tags</p>') +
           '<div id="areaAnotacao">' + htmlAnotacao(c) + '</div>' +
+          '<div class="bloco-comentarios">' +
           '<p class="block-title">comentários</p>' +
           '<div class="reviews">' +
             '<div class="review-list" id="listaComentarios">' + htmlComentarios(c.comentarios) + '</div>' +
@@ -705,6 +709,7 @@
               '<button class="solid-btn" data-m="enviarComentario">enviar</button>' +
             '</div>' +
             '<p class="counter" id="contador">0/' + LIMITE_COMENTARIO + '</p>' +
+          '</div>' +
           '</div>' +
         '</div>' +
       '</div>';
