@@ -1,6 +1,11 @@
 # Servidor estatico simples para desenvolvimento local.
 # Uso:  powershell -ExecutionPolicy Bypass -File serve.ps1
-param([int]$Port = 5173)
+# Sem -Port, vale a variavel de ambiente PORT; sem ela, 5173.
+param([int]$Port = 0)
+
+if ($Port -le 0) {
+  $Port = if ($env:PORT) { [int]$env:PORT } else { 5173 }
+}
 
 $root = Split-Path -Parent $MyInvocation.MyCommand.Path
 $listener = New-Object System.Net.HttpListener
