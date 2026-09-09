@@ -110,7 +110,9 @@ body{
 /* a perspectiva mora aqui, e não no .notebook: assim as folhas giram em 3D
    sendo filhas diretas, sem precisar de preserve-3d nem de translateZ —
    era o translateZ que escalava a folha em 0,08% e borrava o texto. */
-.pages{position:relative;width:100%;height:100%;perspective:2400px}
+/* overflow:hidden guarda a folha virada dentro do caderno: sem ele o verso
+   da pagina virada vazava para a esquerda, espelhado, sobre a mesa */
+.pages{position:relative;width:100%;height:100%;perspective:2400px;overflow:hidden}
 .sheet{
   /* preserve-3d aqui dentro tira os filhos do hit-test no Chrome: a folha
      precisa girar como um plano chapado, quem guarda o espaco 3D e .pages */
@@ -143,7 +145,6 @@ body{
 
 .sheet-inner{
   position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;
-  container:folha / inline-size;
   padding:34px 44px 30px;border-radius:inherit;
 }
 /* o pontilhado é o fundo da própria folha, não uma camada por cima:
@@ -816,6 +817,12 @@ body{
   .plus::before{left:14px;width:6px;height:34px}
   .plus::after{top:14px;height:6px;width:34px}
   .stickers{justify-content:center}
+  /* folha estreita: o campo centralizado nao teria mais onde caber sem
+     encostar no botao, entao o botao entra na fila e vira so o sinal de mais */
+  .glass-bar{gap:10px;justify-content:flex-start}
+  .nova-galeria{position:static;height:42px;padding:0 14px;flex:none}
+  .nova-galeria .rotulo{display:none}
+  .search-field.glass{flex:1 1 auto;max-width:none}
 }
 
 /* ================= celular ================= */
@@ -1233,33 +1240,6 @@ body{
   /* a aberta sobe um pouco e fica mais larga, como a divisória puxada */
   .tab.is-active{height:44px;min-width:122px;transform:none}
   .tab:hover{transform:none}
-}
-
-/* ---------- caderno estreito por causa do Luna Notes ----------
-   A folha se mede a si mesma: com o bloco de notas ao lado o caderno perde
-   largura sem a janela mudar de tamanho, então quem manda no Início é a
-   largura do papel, não a da tela. Fica no fim do arquivo de propósito, para
-   ganhar das regras de largura fixa lá de cima. */
-@container folha (max-width:770px){
-  .inicio-row{gap:20px;margin:20px 0 8px}
-  .new-card{flex:0 0 198px}
-  .recentes-bloco{flex:1 1 300px}
-  .recentes{grid-template-columns:repeat(auto-fit,minmax(148px,1fr));gap:22px 16px}
-  .recentes .sticker{max-width:none}
-  .page-title{padding:11px 16px}
-  .page-title span{font-size:12.5px;letter-spacing:.24em}
-  .recentes-dica{margin-top:10px}
-  .page-foot{margin:20px 0 4px}
-  .gallery{grid-template-columns:repeat(auto-fill,minmax(158px,1fr));gap:26px 16px}
-}
-
-/* folha muito estreita: o campo centralizado nao teria mais onde caber,
-   entao o botao entra na fila e vira so o sinal de mais, como no celular */
-@container folha (max-width:620px){
-  .glass-bar{gap:10px;justify-content:flex-start}
-  .nova-galeria{position:static;height:42px;padding:0 14px;flex:none}
-  .nova-galeria .rotulo{display:none}
-  .search-field.glass{flex:1 1 auto;max-width:none}
 }
 
 /* ================= LUNA NOTES ================= */
