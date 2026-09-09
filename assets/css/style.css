@@ -1377,3 +1377,26 @@ body{
   .luna-cores{gap:3px}
   .luna-cores .cor-marca{width:15px;height:15px}
 }
+
+/* ----- patinha sobre a aba Notas -----
+   Ela marca a aba enquanto a folha esta fechada; ao abrir, sai de cena.
+   O adesivo tem mask-image, entao a pata tem que ficar depois da faixa de
+   cola, senao ela some junto com a borda translucida. */
+.tab .pata{
+  position:absolute;left:50%;bottom:11px;transform:translateX(-50%) rotate(-9deg);
+  width:27px;height:auto;pointer-events:none;
+  opacity:.62;
+  transition:opacity .3s ease,transform .3s ease;
+}
+.tab:hover .pata{opacity:.85;transform:translateX(-50%) rotate(-9deg) scale(1.08)}
+.tab.is-active .pata{opacity:0;transform:translateX(-50%) rotate(-9deg) scale(.8)}
+
+@media (max-width:600px){
+  /* na fileira horizontal a etiqueta e baixa: a pata fica ao lado do nome */
+  .tab .pata{
+    left:auto;right:9px;bottom:auto;top:50%;
+    width:17px;transform:translateY(-50%) rotate(-9deg);
+  }
+  .tab:hover .pata{transform:translateY(-50%) rotate(-9deg) scale(1.08)}
+  .tab.is-active .pata{transform:translateY(-50%) rotate(-9deg) scale(.8)}
+}

@@ -16,7 +16,8 @@ param(
   [Parameter(Mandatory = $true)][string]$Saida,
   [int]$Tolerancia = 40,
   [string]$Recorte,
-  [switch]$SemAparar
+  [switch]$SemAparar,
+  [switch]$Global
 )
 
 Add-Type -AssemblyName System.Drawing
@@ -69,15 +70,27 @@ function Parecido([int]$i) {
   return ($dr -le $Tolerancia -and $dg -le $Tolerancia -and $db -le $Tolerancia)
 }
 
-# semeia a partir de toda a moldura
-for ($x = 0; $x -lt $L; $x++) {
-  foreach ($y in @(0, ($A - 1))) { $fila.Push($y * $L + $x) }
-}
-for ($y = 0; $y -lt $A; $y++) {
-  foreach ($x in @(0, ($L - 1))) { $fila.Push($y * $L + $x) }
+$apagados = 0
+
+# -Global: desenho de contorno, em que o miolo tambem e da cor do fundo e
+# tambem deve sumir. Sem ele vale o alagamento, que so come o que esta fora.
+if ($Global) {
+  for ($i = 0; $i -lt ($L * $A); $i++) {
+    if (Parecido $i) { $bytes[$i * 4 + 3] = 0; $apagados++ }
+  }
+  $fila.Clear()
 }
 
-$apagados = 0
+# semeia a partir de toda a moldura
+if (-not $Global) {
+  for ($x = 0; $x -lt $L; $x++) {
+    foreach ($y in @(0, ($A - 1))) { $fila.Push($y * $L + $x) }
+  }
+  for ($y = 0; $y -lt $A; $y++) {
+    foreach ($x in @(0, ($L - 1))) { $fila.Push($y * $L + $x) }
+  }
+}
+
 while ($fila.Count -gt 0) {
   $i = $fila.Pop()
   if ($visto[$i]) { continue }
