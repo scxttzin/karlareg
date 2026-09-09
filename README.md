@@ -204,9 +204,15 @@ Terceira folha do caderno, na aba **Notas**, logo abaixo da Galeria. As folhas
 ficam empilhadas na ordem `inicio, galeria, luna`: para chegar na terceira, as
 duas de cima viram.
 
-- Formatação no espírito do Notes: negrito, itálico, riscado, marca-texto e
-  tópicos, mais um botão de limpar formatação. Atalhos: `Ctrl+B`, `Ctrl+I`,
-  `Ctrl+Shift+X` (riscar) e `Ctrl+Shift+H` (destacar).
+- Formatação no espírito do Notes: negrito, itálico, sublinhado, riscado,
+  marca-texto, tópicos e limpar formatação. Atalhos: `Ctrl+B`, `Ctrl+I`,
+  `Ctrl+U`, `Ctrl+Shift+X` (riscar) e `Ctrl+Shift+H` (destacar).
+- O marca-texto abre uma paleta acima do próprio botão, com seis cores
+  (amarelo, azul bebê, verde claro, laranja, roxo e vermelho) e a opção de
+  tirar o destaque. A cor escolhida fica guardada para a próxima vez.
+- A gata e as quatro carinhas do título são as imagens da cliente, recortadas
+  com `ferramentas/tirar-fundo.ps1` — o fundo e apagado por alagamento a partir
+  das bordas, senão a barriga branca da gata sumiria junto com o fundo branco.
 - O texto é gravado sozinho meio segundo depois da última tecla, em
   `localStorage[karlareg.luna]`. **Fica no navegador**: não acompanha a
   usuária entre computadores. Para isso seria preciso uma tabela `notas` no

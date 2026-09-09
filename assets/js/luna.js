@@ -14,7 +14,28 @@
   var status = document.getElementById('lunaStatus');
   var campoData = document.getElementById('lunaData');
   var CHAVE = 'karlareg.luna';
-  var MARCA = '#F7E3A4';
+  var CHAVE_COR = 'karlareg.luna.cor';
+
+  /* cores do marca-texto; a escolhida fica guardada de uma vez para a outra */
+  var paleta = document.getElementById('lunaCores');
+  var CORES = Array.prototype.map.call(
+    paleta.querySelectorAll('.cor-marca'), function (b) { return b.dataset.cor; });
+  var MARCA = localStorage.getItem(CHAVE_COR);
+  if (CORES.indexOf(MARCA) < 0) MARCA = CORES[0];
+
+  function acenderPaleta() {
+    Array.prototype.forEach.call(paleta.querySelectorAll('.cor-marca'), function (b) {
+      b.classList.toggle('is-on', b.dataset.cor === MARCA);
+    });
+  }
+  acenderPaleta();
+
+  /* rgb(...) que o navegador devolve, para saber se o trecho já está marcado */
+  function comoRgb(hex) {
+    return 'rgb(' + parseInt(hex.slice(1, 3), 16) + ', ' +
+                    parseInt(hex.slice(3, 5), 16) + ', ' +
+                    parseInt(hex.slice(5, 7), 16) + ')';
+  }
 
   /* ---------- guardar e ler ---------- */
   function ler() {
@@ -76,14 +97,53 @@
   }
 
   /* o navegador devolve a cor de fundo do trecho selecionado em rgb() */
-  function marcado() {
+  function corDoTrecho() {
     var cor = '';
     try { cor = document.queryCommandValue('hiliteColor') || ''; } catch (e) {}
     if (!cor || cor === 'transparent') {
       try { cor = document.queryCommandValue('backColor') || ''; } catch (e) {}
     }
-    return /247,\s*227,\s*164/.test(cor) || cor.toLowerCase() === MARCA.toLowerCase();
+    return cor.replace(/\s+/g, ' ').trim().toLowerCase();
   }
+
+  /* marcado com a cor escolhida agora: só aí o botão desliga o destaque */
+  function marcado() {
+    var cor = corDoTrecho();
+    return cor === comoRgb(MARCA).toLowerCase() || cor === MARCA.toLowerCase();
+  }
+
+  /* ---------- paleta: só aparece pelo botão do marca-texto ---------- */
+  var botaoMarca = document.getElementById('lunaMarca');
+
+  function abrirPaleta(abrir) {
+    paleta.hidden = !abrir;
+    botaoMarca.setAttribute('aria-expanded', abrir ? 'true' : 'false');
+    botaoMarca.classList.toggle('is-on', abrir);
+  }
+
+  /* pinta o trecho escolhido; cor vazia tira o destaque */
+  function aplicarMarca(cor) {
+    texto.focus();
+    document.execCommand('styleWithCSS', false, true);
+    document.execCommand('hiliteColor', false, cor || 'transparent');
+    document.execCommand('styleWithCSS', false, false);
+    guardar();
+  }
+
+  paleta.addEventListener('mousedown', function (e) {
+    if (e.target.closest('.cor-marca')) e.preventDefault();
+  });
+  paleta.addEventListener('click', function (e) {
+    var b = e.target.closest('.cor-marca');
+    if (!b) return;
+    if (b.dataset.cor) {
+      MARCA = b.dataset.cor;
+      try { localStorage.setItem(CHAVE_COR, MARCA); } catch (err) {}
+      acenderPaleta();
+    }
+    aplicarMarca(b.dataset.cor);
+    abrirPaleta(false);
+  });
 
   /* mousedown com preventDefault: sem isso o clique tira a seleção do texto
      antes de o comando rodar, e a formatação não pega em nada */
@@ -93,10 +153,24 @@
 
   barra.addEventListener('click', function (e) {
     var b = e.target.closest('button');
-    if (!b) return;
+    if (!b || b.closest('.luna-cores')) return;
+    if (b.dataset.cmd === 'marca') {
+      abrirPaleta(paleta.hidden);
+      return;
+    }
+    abrirPaleta(false);
     comando(b.dataset.cmd);
     pintarBarra();
     guardar();
+  });
+
+  /* clique fora e Esc fecham a paleta */
+  document.addEventListener('mousedown', function (e) {
+    if (paleta.hidden) return;
+    if (!e.target.closest('.luna-marca-grupo')) abrirPaleta(false);
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && !paleta.hidden) abrirPaleta(false);
   });
 
   /* acende o botão do que está valendo onde o cursor está */
@@ -104,8 +178,8 @@
     Array.prototype.forEach.call(barra.querySelectorAll('button'), function (b) {
       var cmd = b.dataset.cmd, ligado = false;
       if (cmd === 'marca') {
-        ligado = marcado();
-      } else if (cmd !== 'removeFormat') {
+        ligado = marcado() || !paleta.hidden;
+      } else if (cmd && cmd !== 'removeFormat') {
         try { ligado = document.queryCommandState(cmd); } catch (e) {}
       }
       b.classList.toggle('is-on', !!ligado);
@@ -131,7 +205,7 @@
   texto.addEventListener('keydown', function (e) {
     if (!(e.ctrlKey || e.metaKey)) return;
     var k = e.key.toLowerCase();
-    if (k === 'h' && e.shiftKey) { e.preventDefault(); comando('marca'); pintarBarra(); guardar(); }
+    if (k === 'h' && e.shiftKey) { e.preventDefault(); aplicarMarca(marcado() ? '' : MARCA); pintarBarra(); }
     if (k === 'x' && e.shiftKey) { e.preventDefault(); comando('strikeThrough'); pintarBarra(); guardar(); }
   });
 
