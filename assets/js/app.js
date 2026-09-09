@@ -635,7 +635,7 @@
     }
     if (!f.nota) {
       return '<button class="add-nota" data-m="editarNotaFoto">' +
-        '<span class="mais">+</span> nota desta foto</button>';
+        '<span class="mais">+</span> adicionar nota desta foto</button>';
     }
     return '<div class="nota-vista">' +
       '<p class="nota-texto">' + esc(f.nota) + '</p>' +
